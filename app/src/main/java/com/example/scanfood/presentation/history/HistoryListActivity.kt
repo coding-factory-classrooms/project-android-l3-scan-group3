@@ -1,6 +1,7 @@
 
 package com.example.scanfood.presentation.history
 
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -11,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.scanfood.ScanActivity
 import com.example.scanfood.databinding.ActivityHistoryListBinding
 import com.example.scanfood.domain.Product
 import com.example.scanfood.application.history.HistoryListViewModel
@@ -52,8 +54,10 @@ class HistoryListActivity : AppCompatActivity() {
 
         api.init()
 
+        val intent = Intent(this@HistoryListActivity, ScanActivity::class.java)
+
         binding.fab.setOnClickListener {
-            model.scan()
+            if(model.simulateIsActive()) model.simulateScan() else startActivity(intent)
         }
         binding.fab.setOnLongClickListener {
             model.toggleCamera()
