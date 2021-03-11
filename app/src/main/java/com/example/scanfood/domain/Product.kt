@@ -37,7 +37,6 @@ fun Product.toColorCategory(): Int {
     }
 }
 
-fun Product.toImage(): Bitmap {
-    val url = URL("http://image10.bizrate-images.com/resize?sq=60&uid=2216744464")
-    return BitmapFactory.decodeStream(url.openConnection().getInputStream())
+fun Product.toImage(url: String): Bitmap {
+    return BitmapFactory.decodeStream(URL(url).openConnection().getInputStream())
 }
