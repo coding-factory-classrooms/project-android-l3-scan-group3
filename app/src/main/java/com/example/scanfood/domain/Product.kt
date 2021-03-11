@@ -48,6 +48,20 @@ fun Product.toColorCategory(): Int {
     }
 }
 
+fun Product.toInfoCategory(): String {
+    return when {
+        dateExp!!.isAfter(ChronoLocalDate.from(ZonedDateTime.now())) -> {
+            "Votre aliment a dépassé la date d'expiration."
+        }
+        dateExp!!.isBefore(ChronoLocalDate.from(ZonedDateTime.now())) -> {
+            "Tout va bien !"
+        }
+        else -> {
+            "Votre aliment est bientôt périmé. Faites attention !"
+        }
+    }
+}
+
 /**
  * Convert url image to Bitmap image
  *
