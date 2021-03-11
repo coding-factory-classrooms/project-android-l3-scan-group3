@@ -5,6 +5,7 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import com.example.scanfood.domain.Product
 import java.text.SimpleDateFormat
@@ -27,7 +28,7 @@ class DataBaseHandler(var context: Context) : SQLiteOpenHelper(
     1
 ) {
     override fun onCreate(db: SQLiteDatabase?) {
-        val createTable = "CREATE TABLE " + TABLENAME + " (" + COL_ID + " INTEGER PRIMARY KEY," + COL_NAME + " VARCHAR(256)," + COL_IMAGE + "VARCHAR(256)" + COL_DATEEXP + "VARCHAR(256)" + COL_SCANDATE + "VARCHAR(256)" + COL_USERNAME + "VARCHAR(256))"
+        val createTable = "CREATE TABLE " + TABLENAME + "(" + COL_ID + "INTEGER PRIMARY KEY," + COL_NAME + " VARCHAR(256)," + COL_IMAGE + "VARCHAR(256)," + COL_DATEEXP + "VARCHAR(256)," + COL_SCANDATE + "VARCHAR(256)," + COL_USERNAME + "VARCHAR(256))"
         db?.execSQL(createTable)
     }
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
@@ -62,6 +63,7 @@ class DataBaseHandler(var context: Context) : SQLiteOpenHelper(
         val _success = db.insert(TABLENAME, null, values)
         db.close()
         return (Integer.parseInt("$_success") != -1)
+        Log.i("Je suis dans la fonction add", _success.toString())
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
