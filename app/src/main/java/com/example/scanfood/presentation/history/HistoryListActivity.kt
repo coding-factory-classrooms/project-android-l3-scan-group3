@@ -60,9 +60,9 @@ class HistoryListActivity : AppCompatActivity() {
         api.init()
 
 
-//        val intent = Intent(this@HistoryListActivity, ScanActivity::class.java)
-//        intent.action = Intent.ACTION_VIEW
-//        intent.addCategory()
+        val intent = Intent(this@HistoryListActivity, ScanActivity::class.java)
+        intent.action = Intent.ACTION_VIEW
+
 
         binding.fab.setOnClickListener {
             if(model.simulateIsActive()) model.simulateScan() else startActivity(intent)
