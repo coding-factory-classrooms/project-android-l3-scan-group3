@@ -104,7 +104,10 @@ interface IScanFood {
     fun getFood(@Path("id") id: Int): Observable<Product>
 }
 
-
+/**
+ * Gson extension for LocalDate serialization
+ * it will be serialized on the way to a Product
+ */
 internal class LocalDateSerializer : JsonSerializer<LocalDate?> {
     override fun serialize(
         localDate: LocalDate?,
@@ -119,7 +122,10 @@ internal class LocalDateSerializer : JsonSerializer<LocalDate?> {
     }
 }
 
-
+/**
+ * Gson extension for LocalDate deserialization
+ * it will be serialized on the way to a Product
+ */
 internal class LocalDateDeserializer : JsonDeserializer<LocalDate> {
     @Throws(JsonParseException::class)
     override fun deserialize(

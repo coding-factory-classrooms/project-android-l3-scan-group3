@@ -9,7 +9,6 @@ import androidx.lifecycle.ViewModel
 import com.example.scanfood.domain.Product
 import com.example.scanfood.domain.toColorCategory
 import java.time.LocalDate
-import java.util.*
 
 const val TAG = "HistoryListViewModel"
 

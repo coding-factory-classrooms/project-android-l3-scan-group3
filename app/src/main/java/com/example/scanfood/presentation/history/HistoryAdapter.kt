@@ -34,6 +34,4 @@ class HistoryAdapter(private  var products: List<Product>) : RecyclerView.Adapte
         this.products = products
         notifyDataSetChanged()
     }
-
-
 }
