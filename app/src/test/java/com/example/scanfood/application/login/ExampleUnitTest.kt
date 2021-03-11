@@ -1,4 +1,4 @@
-package com.example.scanfood.login
+package com.example.scanfood.application.login
 
 import org.junit.Test
 

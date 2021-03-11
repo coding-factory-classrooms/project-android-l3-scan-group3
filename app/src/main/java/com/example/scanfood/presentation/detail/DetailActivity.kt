@@ -1,4 +1,4 @@
-package com.example.scanfood.detail
+package com.example.scanfood.presentation.detail
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle

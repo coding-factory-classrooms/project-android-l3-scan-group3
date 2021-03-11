@@ -22,7 +22,13 @@ data class Product(
     var hide: Boolean = false
 )
 
-
+/**
+ * Convert to Color according to date
+ *
+ * @param
+ * @return Int
+ * @see
+ */
 fun Product.toColorCategory(): Int {
     return when {
         dateExp.after(Date()) -> {
@@ -37,6 +43,13 @@ fun Product.toColorCategory(): Int {
     }
 }
 
+/**
+ * Convert url image to Bitmap image
+ *
+ * @param
+ * @return Bitmap
+ * @see
+ */
 fun Product.toImage(url: String): Bitmap {
     return BitmapFactory.decodeStream(URL(url).openConnection().getInputStream())
 }

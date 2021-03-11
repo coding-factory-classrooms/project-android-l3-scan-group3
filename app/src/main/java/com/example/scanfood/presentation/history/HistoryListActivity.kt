@@ -1,4 +1,4 @@
-package com.example.scanfood.historylist
+package com.example.scanfood.presentation.history
 
 import android.os.Bundle
 import android.util.Log
@@ -8,8 +8,10 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.scanfood.databinding.ActivityHistoryListBinding
 import com.example.scanfood.domain.Product
-import com.example.scanfood.infrastructure.CustomCallBack
-import com.example.scanfood.infrastructure.ScanFoodService
+import com.example.scanfood.application.history.HistoryListViewModel
+import com.example.scanfood.application.history.HistoryListViewModelState
+import com.example.scanfood.infrastructure.api.CustomCallBack
+import com.example.scanfood.infrastructure.api.ScanFoodService
 
 const val TAG = "HistoryActivity"
 
@@ -18,7 +20,8 @@ class HistoryListActivity : AppCompatActivity() {
     private lateinit var binding: ActivityHistoryListBinding
     private lateinit var adapter: HistoryAdapter
     private val products: HistoryListViewModel by viewModels()
-    private val api: ScanFoodService = ScanFoodService
+    private val api: ScanFoodService =
+        ScanFoodService
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,7 +30,8 @@ class HistoryListActivity : AppCompatActivity() {
 
         products.getState().observe(this, Observer { updateUI(it)})
 
-        adapter = HistoryAdapter(listOf())
+        adapter =
+            HistoryAdapter(listOf())
 
         binding.recyclerView.adapter = adapter
         binding.recyclerView.layoutManager = LinearLayoutManager(this)
@@ -38,10 +42,12 @@ class HistoryListActivity : AppCompatActivity() {
         var product: Product
 
         api.init()
-        api.findById(1, object : CustomCallBack{
+        api.findById(1, object :
+            CustomCallBack {
             override fun onProductCallBack(value: Product) {
                 product = value
                 Log.i(TAG, "onProductCallBack : $product")
+//                adapter.updateDataSet(listOf(product))
             }
 
         })

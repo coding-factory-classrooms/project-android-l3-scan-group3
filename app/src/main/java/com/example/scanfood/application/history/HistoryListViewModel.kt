@@ -1,10 +1,9 @@
-package com.example.scanfood.historylist
+package com.example.scanfood.application.history
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.scanfood.domain.Product
-import com.example.scanfood.domain.toColorCategory
 import java.util.*
 
 
@@ -42,7 +41,11 @@ class HistoryListViewModel : ViewModel() {
     }
 
     fun toggleCamera(){
-        state.postValue(HistoryListViewModelState.CameraOff(!state.value!!.cameraEnabled))
+        state.postValue(
+            HistoryListViewModelState.CameraOff(
+                !state.value!!.cameraEnabled
+            )
+        )
     }
 
     fun usePlaceHolderData(){
@@ -72,7 +75,11 @@ class HistoryListViewModel : ViewModel() {
 
     fun addItem(product: Product){
         val adding: List<Product> = state.value!!.products.plus(product)
-        state.postValue(HistoryListViewModelState.Success(products = adding))
+        state.postValue(
+            HistoryListViewModelState.Success(
+                products = adding
+            )
+        )
     }
 
 //    fun updateItem(id: Int){
@@ -84,11 +91,19 @@ class HistoryListViewModel : ViewModel() {
 
     fun deleteItem(product: Product){
         val next: List<Product> = state.value!!.products.minus(product)
-        state.postValue(HistoryListViewModelState.Success(products = next))
+        state.postValue(
+            HistoryListViewModelState.Success(
+                products = next
+            )
+        )
     }
     fun orderByDate(){
         val next: List<Product> = state.value!!.products.sortedBy { it.dateExp }
-        state.postValue(HistoryListViewModelState.Success(products = next))
+        state.postValue(
+            HistoryListViewModelState.Success(
+                products = next
+            )
+        )
     }
 
 //    fun filterByColorDuration(color: Int){

@@ -1,4 +1,4 @@
-package com.example.scanfood.infrastructure
+package com.example.scanfood.infrastructure.api
 
 import android.util.Log
 import com.example.scanfood.domain.Product

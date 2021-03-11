@@ -1,4 +1,4 @@
-package com.example.scanfood.detail
+package com.example.scanfood.application.detail
 
 import androidx.lifecycle.ViewModel
 
