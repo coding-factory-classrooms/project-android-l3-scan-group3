@@ -19,14 +19,13 @@
         android:theme="@style/Theme.AppCompat.NoActionBar">
         <activity android:name=".presentation.detail.DetailActivity" />
         <activity android:name=".presentation.login.LoginActivity">
+        </activity>
+        <activity android:name=".presentation.history.HistoryListActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
-        </activity>
-        <activity android:name=".presentation.history.HistoryListActivity">
-
         </activity>
         <activity android:name=".ScanActivity">
         </activity>
