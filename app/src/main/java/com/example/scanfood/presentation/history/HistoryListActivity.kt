@@ -1,10 +1,12 @@
 
 package com.example.scanfood.presentation.history
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.Toast
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultCallback
@@ -16,14 +18,13 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.scanfood.ScanActivity
-import com.example.scanfood.databinding.ActivityHistoryListBinding
-import com.example.scanfood.domain.Product
 import com.example.scanfood.application.history.HistoryListViewModel
 import com.example.scanfood.application.history.HistoryListViewModelState
 import com.example.scanfood.databinding.ActivityHistoryListBinding
 import com.example.scanfood.domain.Product
 import com.example.scanfood.infrastructure.api.CustomCallBack
 import com.example.scanfood.infrastructure.api.ScanFoodService
+
 
 const val TAG = "HistoryActivity"
 
@@ -33,6 +34,7 @@ class HistoryListActivity : AppCompatActivity() {
     private lateinit var adapter: HistoryAdapter
     private val model: HistoryListViewModel by viewModels()
     private val api: ScanFoodService = ScanFoodService
+
 
     /**
      * Create all requirements
@@ -51,7 +53,7 @@ class HistoryListActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityHistoryListBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        adapter = HistoryAdapter(listOf())
+        adapter = HistoryAdapter(listOf(), this, this)
         binding.recyclerView.adapter = adapter
         binding.recyclerView.layoutManager = LinearLayoutManager(this)
         binding.recyclerView.apply { addItemDecoration(DividerItemDecoration(this.context, DividerItemDecoration.VERTICAL)) }
@@ -116,4 +118,16 @@ class HistoryListActivity : AppCompatActivity() {
             }
         }
     }
+
+    override fun onLongClick(v: View?): Boolean {
+        if(v?.tag != null)
+            Log.i(TAG, "test long click")
+        return true
+    }
+
+    override fun onClick(v: View?) {
+        if(v?.tag != null)
+            Log.i(TAG, "test click")
+    }
+
 }
