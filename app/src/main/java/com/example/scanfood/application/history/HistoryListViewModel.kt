@@ -5,7 +5,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.scanfood.domain.Product
-import com.example.scanfood.domain.toColorCategory
 import java.util.*
 
 const val TAG = "HistoryListViewModel"
@@ -22,6 +21,7 @@ sealed class HistoryListViewModelState(
         HistoryListViewModelState(errorMessage = errorMessage)
     data class Changed(override val products: List<Product>) : HistoryListViewModelState()
 }
+
 
 
 class HistoryListViewModel : ViewModel() {
@@ -57,6 +57,7 @@ class HistoryListViewModel : ViewModel() {
     fun toggleCamera(){
         state.postValue(HistoryListViewModelState.CameraOff(cameraEnabled = !state.value!!.cameraEnabled))
     }
+
 
     private fun usePlaceHolderData(){
         if(!products.contains(placeholderProduct)) addItem(placeholderProduct)
@@ -106,6 +107,4 @@ class HistoryListViewModel : ViewModel() {
         state.postValue(HistoryListViewModelState.Changed(products = products))
         Log.i(TAG, "products now filtered by duration color")
     }
-
 }
-
