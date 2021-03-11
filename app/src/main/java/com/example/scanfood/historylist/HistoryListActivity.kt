@@ -1,12 +1,17 @@
 package com.example.scanfood.historylist
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.scanfood.databinding.ActivityHistoryListBinding
+import com.example.scanfood.domain.Product
+import com.example.scanfood.infrastructure.CustomCallBack
 import com.example.scanfood.infrastructure.ScanFoodService
+
+const val TAG = "HistoryActivity"
 
 class HistoryListActivity : AppCompatActivity() {
 
@@ -26,10 +31,20 @@ class HistoryListActivity : AppCompatActivity() {
 
         binding.recyclerView.adapter = adapter
         binding.recyclerView.layoutManager = LinearLayoutManager(this)
-        binding.fab.setOnClickListener { products.toggleCamera() }
+        binding.fab.setOnClickListener {
+
+        }
+
+        var product: Product
 
         api.init()
-        api.findById(2)
+        api.findById(1, object : CustomCallBack{
+            override fun onProductCallBack(value: Product) {
+                product = value
+                Log.i(TAG, "onProductCallBack : $product")
+            }
+
+        })
 
     }
 
