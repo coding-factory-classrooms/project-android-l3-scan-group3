@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.scanfood.domain.Product
+import java.time.LocalDate
 import java.util.*
 
 const val TAG = "HistoryListViewModel"
