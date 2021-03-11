@@ -7,6 +7,7 @@ import com.example.scanfood.databinding.ItemHistoryBinding
 import com.example.scanfood.domain.Product
 import com.example.scanfood.domain.toColorCategory
 import com.example.scanfood.domain.toImage
+import com.squareup.picasso.Picasso
 
 class HistoryAdapter(private  var products: List<Product>) : RecyclerView.Adapter<HistoryAdapter.ViewHolder>() {
     class ViewHolder(val binding: ItemHistoryBinding) : RecyclerView.ViewHolder(binding.root)
@@ -18,12 +19,13 @@ class HistoryAdapter(private  var products: List<Product>) : RecyclerView.Adapte
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        val picasso = Picasso.get()
         val product = products.get(position)
         with(holder.binding){
             titleTextView.text = product.title
             expirationDateTextView.text = product.dateExp.toString()
             expirationDateTextView.setBackgroundColor(product.toColorCategory())
-//            itemImageView.setImageBitmap(product.toImage())
+            picasso.load(product.image).into(itemImageView)
         }
     }
 
