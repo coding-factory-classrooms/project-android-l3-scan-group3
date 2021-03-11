@@ -8,14 +8,12 @@ import com.example.scanfood.domain.Product
 import com.example.scanfood.domain.toColorCategory
 
 class HistoryAdapter(private  var products: List<Product>) : RecyclerView.Adapter<HistoryAdapter.ViewHolder>() {
-    class ViewHolder(val binding: ItemHistoryBinding) : RecyclerView.ViewHolder(binding.root) {}
+    class ViewHolder(val binding: ItemHistoryBinding) : RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val binding = ItemHistoryBinding.inflate(inflater, parent, false)
-        return ViewHolder(
-            binding
-        )
+        return ViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
@@ -34,6 +32,5 @@ class HistoryAdapter(private  var products: List<Product>) : RecyclerView.Adapte
         notifyDataSetChanged()
     }
 
+
 }
-
-
