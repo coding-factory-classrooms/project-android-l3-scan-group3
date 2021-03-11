@@ -1,11 +1,15 @@
 
 package com.example.scanfood.presentation.history
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.ActivityResultCallback
+import androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
@@ -13,12 +17,13 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.scanfood.ScanActivity
-import com.example.scanfood.databinding.ActivityHistoryListBinding
-import com.example.scanfood.domain.Product
 import com.example.scanfood.application.history.HistoryListViewModel
 import com.example.scanfood.application.history.HistoryListViewModelState
+import com.example.scanfood.databinding.ActivityHistoryListBinding
+import com.example.scanfood.domain.Product
 import com.example.scanfood.infrastructure.api.CustomCallBack
 import com.example.scanfood.infrastructure.api.ScanFoodService
+
 
 const val TAG = "HistoryActivity"
 
@@ -28,6 +33,7 @@ class HistoryListActivity : AppCompatActivity() {
     private lateinit var adapter: HistoryAdapter
     private val model: HistoryListViewModel by viewModels()
     private val api: ScanFoodService = ScanFoodService
+
 
     /**
      * Create all requirements
@@ -54,7 +60,10 @@ class HistoryListActivity : AppCompatActivity() {
 
         api.init()
 
-        val intent = Intent(this@HistoryListActivity, ScanActivity::class.java)
+
+//        val intent = Intent(this@HistoryListActivity, ScanActivity::class.java)
+//        intent.action = Intent.ACTION_VIEW
+//        intent.addCategory()
 
         binding.fab.setOnClickListener {
             if(model.simulateIsActive()) model.simulateScan() else startActivity(intent)
@@ -108,4 +117,5 @@ class HistoryListActivity : AppCompatActivity() {
             }
         }
     }
+
 }
