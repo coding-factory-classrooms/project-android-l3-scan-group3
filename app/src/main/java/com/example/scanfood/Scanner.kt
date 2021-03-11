@@ -22,13 +22,14 @@ import android.os.Bundle
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.example.scanfood.databinding.ActivityLoginBinding
+import com.example.scanfood.infrastructure.api.CustomCallBack
 
 
 object Scanner  : Activity() {
     lateinit var binding: ActivityScanBinding
     lateinit var codeScanner: CodeScanner
 
-    fun startScan(context: Context) {
+    fun startScan(context: Context, callback: CustomCallBack) {
         codeScanner = CodeScanner(context, binding.scanView)
         codeScanner.camera = CodeScanner.CAMERA_BACK // active la camera de derriere
         codeScanner.formats = listOf(BarcodeFormat.QR_CODE) // scan uniquement les qr codes
@@ -42,6 +43,7 @@ object Scanner  : Activity() {
         codeScanner.decodeCallback = DecodeCallback {
             runOnUiThread {
                 binding.textViewResult.text = it.text
+//                callback(it.text)
             }
         }
         codeScanner.errorCallback = ErrorCallback { // or ErrorCallback.SUPPRESS
@@ -60,7 +62,6 @@ object Scanner  : Activity() {
     }
 
     fun resume() {
-
         if(::codeScanner.isInitialized) {
             codeScanner?.startPreview()
         }

@@ -44,17 +44,13 @@ class HistoryListViewModel : ViewModel() {
 
 
     @RequiresApi(Build.VERSION_CODES.O)
-    fun scan(){
-        if(!state.value!!.cameraEnabled){
-            usePlaceHolderData()
-            Log.d(TAG, "simulate data wihout camera")
-        }else{
-            //TODO : implements
-            Log.i(TAG, "scanning...")
-
-        }
-
+    fun simulateScan(){
+        usePlaceHolderData()
+        Log.d(TAG, "simulate data wihout camera")
     }
+
+    fun simulateIsActive() : Boolean = !state.value!!.cameraEnabled
+
 
     fun getQrData(){
         //TODO : implements
