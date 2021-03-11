@@ -10,7 +10,6 @@ import java.net.URL
 import java.time.LocalDate
 import java.time.ZonedDateTime
 import java.time.chrono.ChronoLocalDate
-import java.util.*
 
 data class Product(
     @Expose
@@ -56,6 +55,6 @@ fun Product.toColorCategory(): Int {
  * @return Bitmap
  * @see
  */
-fun Product.toImage(url: String): Bitmap {
-    return BitmapFactory.decodeStream(URL(url).openConnection().getInputStream())
+fun Product.toImage(): Bitmap {
+    return BitmapFactory.decodeStream(URL(image).openStream())
 }

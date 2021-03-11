@@ -2,8 +2,8 @@ package com.example.scanfood.infrastructure.api
 
 import android.util.Log
 import com.example.scanfood.domain.Product
-import com.google.gson.Gson
-import com.google.gson.GsonBuilder
+import com.google.gson.*
+import com.google.gson.JsonParseException
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -15,10 +15,16 @@ import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Path
+import java.lang.reflect.Type
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.util.*
+import kotlin.jvm.Throws
+
 
 const val TAG = "ScanFoodService"
 
-interface CustomCallBack{
+interface CustomCallBack {
     fun onProductCallBack(value: Product)
 }
 
@@ -52,7 +58,11 @@ object ScanFoodService {
         client = OkHttpClient
             .Builder()
             .build()
-        gson = GsonBuilder().setDateFormat("dd/MM/yyyy").create()
+        gson = GsonBuilder()
+            .registerTypeAdapter(LocalDate::class.java, LocalDateDeserializer())
+            .registerTypeAdapter(LocalDate::class.java, LocalDateSerializer())
+            .setPrettyPrinting()
+            .create()
         refrofit = Retrofit.Builder()
             .baseUrl("http://15.237.137.24:8080")
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
@@ -78,10 +88,40 @@ object ScanFoodService {
             service.getFood(id)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe({resp -> Log.i(TAG, "food response : ${resp.image}")
+                .subscribe({ resp ->
+                    Log.i(TAG, "food response : ${resp.image}")
                     customCallBack.onProductCallBack(resp)
-                }, { err -> Log.d(TAG, "error response : ${err.message}") }))
+                }, { err -> Log.d(TAG, "error response : ${err.message}") })
+        )
 
     }
 }
 
+internal class LocalDateSerializer : JsonSerializer<LocalDate?> {
+    override fun serialize(
+        localDate: LocalDate?,
+        srcType: Type?,
+        context: JsonSerializationContext?
+    ): JsonElement {
+        return JsonPrimitive(formatter.format(localDate))
+    }
+
+    companion object {
+        private val formatter: DateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
+    }
+}
+
+
+internal class LocalDateDeserializer : JsonDeserializer<LocalDate> {
+    @Throws(JsonParseException::class)
+    override fun deserialize(
+        json: JsonElement,
+        typeOfT: Type,
+        context: JsonDeserializationContext
+    ): LocalDate {
+        return LocalDate.parse(
+            json.asString,
+            DateTimeFormatter.ofPattern("dd/MM/yyyy").withLocale(Locale.ENGLISH)
+        )
+    }
+}

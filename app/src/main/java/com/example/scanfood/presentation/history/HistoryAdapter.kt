@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.scanfood.databinding.ItemHistoryBinding
 import com.example.scanfood.domain.Product
 import com.example.scanfood.domain.toColorCategory
+import com.example.scanfood.domain.toImage
 
 class HistoryAdapter(private  var products: List<Product>) : RecyclerView.Adapter<HistoryAdapter.ViewHolder>() {
     class ViewHolder(val binding: ItemHistoryBinding) : RecyclerView.ViewHolder(binding.root)

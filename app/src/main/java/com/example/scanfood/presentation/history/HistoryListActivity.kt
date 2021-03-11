@@ -1,10 +1,14 @@
+
 package com.example.scanfood.presentation.history
 
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.viewModels
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.scanfood.databinding.ActivityHistoryListBinding
 import com.example.scanfood.domain.Product
@@ -22,7 +26,6 @@ class HistoryListActivity : AppCompatActivity() {
     private val model: HistoryListViewModel by viewModels()
     private val api: ScanFoodService = ScanFoodService
 
-
     /**
      * Create all requirements
      * for the activity
@@ -35,6 +38,7 @@ class HistoryListActivity : AppCompatActivity() {
      * @return
      * @see
      */
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityHistoryListBinding.inflate(layoutInflater)
@@ -42,12 +46,13 @@ class HistoryListActivity : AppCompatActivity() {
         adapter = HistoryAdapter(listOf())
         binding.recyclerView.adapter = adapter
         binding.recyclerView.layoutManager = LinearLayoutManager(this)
+        binding.recyclerView.apply { addItemDecoration(DividerItemDecoration(this.context, DividerItemDecoration.VERTICAL)) }
         model.getState().observe(this, Observer { updateUI(it)})
+
         api.init()
 
         binding.fab.setOnClickListener {
             model.scan()
-
         }
         binding.fab.setOnLongClickListener {
             model.toggleCamera()

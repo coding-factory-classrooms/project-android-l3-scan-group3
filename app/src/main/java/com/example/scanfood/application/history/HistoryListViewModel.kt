@@ -1,10 +1,13 @@
 package com.example.scanfood.application.history
 
+import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.scanfood.domain.Product
+import com.example.scanfood.domain.toColorCategory
 import java.time.LocalDate
 import java.util.*
 
@@ -26,13 +29,14 @@ sealed class HistoryListViewModelState(
 
 
 class HistoryListViewModel : ViewModel() {
+    @RequiresApi(Build.VERSION_CODES.O)
     private var placeholderProduct: Product =
         Product(
             0,
             "Tarte aux pommes",
             "https://static.750g.com/images/600-600/9823eb627203c878f3e36d72f8ce6d1c/tarte-aux-pommes.jpg",
-            Date(),
-            Date()
+            LocalDate.now(),
+            LocalDate.now()
         )
     private var products = mutableListOf<Product>()
     private val state = MutableLiveData<HistoryListViewModelState>()
@@ -40,15 +44,17 @@ class HistoryListViewModel : ViewModel() {
     init { state.value = HistoryListViewModelState.Empty }
 
 
+    @RequiresApi(Build.VERSION_CODES.O)
     fun scan(){
-        //TODO : implements
         if(!state.value!!.cameraEnabled){
             usePlaceHolderData()
             Log.d(TAG, "simulate data wihout camera")
-        }
-        Log.i(TAG, "scanning...")
+        }else{
+            //TODO : implements
+            Log.i(TAG, "scanning...")
 
-        // do something
+        }
+
     }
 
     fun getQrData(){
@@ -60,6 +66,7 @@ class HistoryListViewModel : ViewModel() {
     }
 
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun usePlaceHolderData(){
         if(!products.contains(placeholderProduct)) addItem(placeholderProduct)
     }
@@ -84,8 +91,9 @@ class HistoryListViewModel : ViewModel() {
         Log.i(TAG, "product added")
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     fun updateItem(index: Int, product: Product){
-        product.scanDate = Date()
+        product.scanDate = LocalDate.now()
         products[index] = product
         state.postValue(HistoryListViewModelState.Changed(products = products))
         Log.i(TAG, "product updated")
@@ -103,6 +111,7 @@ class HistoryListViewModel : ViewModel() {
         Log.i(TAG, "products now ordered by expiration date")
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     fun filterByColorDuration(color: Int){
         products.map { if(it.toColorCategory() != color ) it.hide = true else it.hide }
         state.postValue(HistoryListViewModelState.Changed(products = products))
