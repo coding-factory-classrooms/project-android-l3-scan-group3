@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModel
 import com.example.scanfood.domain.Product
 import com.example.scanfood.domain.toColorCategory
 import java.time.LocalDate
+import java.util.*
 
 const val TAG = "HistoryListViewModel"
 
@@ -49,16 +50,41 @@ class HistoryListViewModel : ViewModel() {
         Log.d(TAG, "simulate data wihout camera")
     }
 
-    fun simulateIsActive() : Boolean = !state.value!!.cameraEnabled
-
-
     fun getQrData(){
         //TODO : implements
     }
 
+   fun getDateExp() : String {
+        return placeholderProduct.dateExp.toString()
+    }
+
+    fun getImage() : String {
+        return placeholderProduct.image
+    }
+    fun getTitle() : String {
+        return placeholderProduct.title
+    }
+
+    fun simulateIsActive() : Boolean = !state.value!!.cameraEnabled
+
+    fun getScanDate() : String {
+        return placeholderProduct.scanDate.toString()
+    }
+
+
     fun toggleCamera(){
         state.postValue(HistoryListViewModelState.CameraOff(cameraEnabled = !state.value!!.cameraEnabled))
     }
+
+    fun getSetColor() : Int {
+        return placeholderProduct.toColorCategory()
+    }
+
+
+    fun getSetInfo() : String {
+        return placeholderProduct.toInfoCategory()
+    }
+
 
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -79,6 +105,9 @@ class HistoryListViewModel : ViewModel() {
     fun getItems(){
         //TODO : implements
     }
+
+
+
 
     fun addItem(product: Product){
         products.add(product)
