@@ -9,47 +9,64 @@
 
     <EditText
         android:id="@+id/usernameEditText"
+        style="@style/Widget.AppCompat.EditText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
         android:ems="10"
+        android:hint="Username"
         android:inputType="textPersonName"
-        android:text="Username"
+        android:textColorHighlight="#575757"
+        android:textColorLink="#575757"
+        android:textCursorDrawable="@color/colorPrimary"
         app:layout_constraintBottom_toTopOf="@+id/passwordEditText"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_chainStyle="packed"
-        tools:text="Username" />
+        app:layout_constraintVertical_chainStyle="packed" />
 
     <EditText
         android:id="@+id/passwordEditText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:inputType="textPersonName"
-        android:text="Password"
+        android:hint="Password"
+        android:inputType="textPassword"
+        android:textColorHighlight="#575757"
+        android:textColorLink="#575757"
+        android:textCursorDrawable="@color/colorPrimary"
         app:layout_constraintBottom_toTopOf="@+id/loginButton"
         app:layout_constraintEnd_toEndOf="@+id/usernameEditText"
         app:layout_constraintStart_toStartOf="@+id/usernameEditText"
-        app:layout_constraintTop_toBottomOf="@+id/usernameEditText"
-        tools:text="Password" />
+        app:layout_constraintTop_toBottomOf="@+id/usernameEditText" />
 
     <Button
         android:id="@+id/loginButton"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_width="216dp"
+        android:layout_height="39dp"
         android:layout_marginTop="32dp"
         android:background="@drawable/rounded_shape"
+        android:drawableBottom="@drawable/rounded_shape"
+        android:shape="ring"
         android:text="Login"
         android:textColor="#FFFFFF"
         app:layout_constraintBottom_toBottomOf="parent"
+
         app:layout_constraintEnd_toEndOf="@+id/usernameEditText"
+
         app:layout_constraintStart_toStartOf="@+id/usernameEditText"
         app:layout_constraintTop_toBottomOf="@+id/passwordEditText"
+        tools:text="Login" />
 
-    tools:text="Login"
-
-        />
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="103dp"
+        android:layout_height="80dp"
+        app:layout_constraintBottom_toTopOf="@+id/usernameEditText"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.923"
+        app:srcCompat="@drawable/icone" />
 </androidx.constraintlayout.widget.ConstraintLayout>

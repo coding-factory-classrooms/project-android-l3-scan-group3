@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/fond"
+    tools:context=".detail.DetailActivity">
+
+    <ImageView
+        android:id="@+id/imageViewProduct"
+        android:layout_width="203dp"
+        android:layout_height="211dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.223"
+        tools:srcCompat="@tools:sample/avatars" />
+
+    <TextView
+        android:id="@+id/textViewProduct"
+        android:layout_width="210dp"
+        android:layout_height="27dp"
+        android:gravity="center"
+        android:textAllCaps="false"
+        android:textColor="#FFFFFF"
+        android:textIsSelectable="false"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/imageViewProduct"
+        app:layout_constraintHorizontal_bias="0.571"
+        app:layout_constraintStart_toStartOf="@+id/imageViewProduct"
+        app:layout_constraintTop_toBottomOf="@+id/imageViewProduct"
+        app:layout_constraintVertical_bias="0.042"
+        tools:text="Nom produit" />
+
+    <TextView
+        android:id="@+id/textViewDate"
+        android:layout_width="196dp"
+        android:layout_height="30dp"
+        android:gravity="center"
+        android:textColor="#FFFFFF"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/imageViewProduct"
+        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintStart_toStartOf="@+id/imageViewProduct"
+        app:layout_constraintTop_toBottomOf="@+id/textViewProduct"
+        app:layout_constraintVertical_bias="0.128"
+        tools:text="Date" />
+
+    <TextView
+        android:id="@+id/textViewInfo"
+        android:layout_width="211dp"
+        android:layout_height="140dp"
+        android:gravity="center"
+        android:textColor="#FFFFFF"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/imageViewProduct"
+        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintStart_toStartOf="@+id/imageViewProduct"
+        app:layout_constraintTop_toBottomOf="@+id/textViewDate"
+        app:layout_constraintVertical_bias="0.148"
+        tools:text="Informations" />
+
+    <TextView
+        android:id="@+id/textViewDDJ"
+        android:layout_width="231dp"
+        android:layout_height="24dp"
+        android:textColor="#FFFFFF"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.088"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.932"
+        tools:text="Date du scan" />
+</androidx.constraintlayout.widget.ConstraintLayout>
