@@ -1,4 +1,4 @@
-package com.example.scanfood.login
+package com.example.scanfood.presentation.login
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -7,10 +7,11 @@ import android.util.Log
 import android.widget.Toast
 import androidx.core.widget.doAfterTextChanged
 import androidx.lifecycle.Observer
-import com.example.scanfood.R
 import com.example.scanfood.databinding.ActivityLoginBinding
-import androidx.lifecycle.ViewModel
 import androidx.activity.viewModels
+import com.example.scanfood.application.login.LoginViewModel
+import com.example.scanfood.application.login.LoginViewModelState
+import com.example.scanfood.presentation.history.HistoryListActivity
 
 
 private const val TAG = "LoginActivity"
@@ -74,8 +75,8 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun navigateToMovieList() {
-      /*  val intent = Intent(this, MovieListActivity::class.java)
+      val intent = Intent(this, HistoryListActivity::class.java)
         startActivity(intent)
-        finish()*/
+        finish()
     }
 }
