@@ -106,9 +106,6 @@ class HistoryListViewModel : ViewModel() {
         //TODO : implements
     }
 
-
-
-
     fun addItem(product: Product){
         products.add(product)
         state.postValue(HistoryListViewModelState.Changed(products = products))
