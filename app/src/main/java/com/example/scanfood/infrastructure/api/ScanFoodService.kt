@@ -24,23 +24,6 @@ import kotlin.jvm.Throws
 
 const val TAG = "ScanFoodService"
 
-interface CustomCallBack {
-    fun onProductCallBack(value: Product)
-}
-
-interface IScanFood {
-    /**
-     * Return a raw data json,
-     * it will be serialized on the way to a Product
-     *
-     * @param  id   an integer id
-     * @return      the product from id=?
-     * @see         Call<Product>
-     */
-    @GET("/scanfoods/{id}")
-    fun getFood(@Path("id") id: Int): Observable<Product>
-}
-
 object ScanFoodService {
     private lateinit var gson: Gson
     private lateinit var refrofit: Retrofit
@@ -97,6 +80,34 @@ object ScanFoodService {
     }
 }
 
+interface CustomCallBack {
+    /**
+     * Callback based on Product
+     *
+     * @param  value Product
+     * @return
+     * @see
+     */
+    fun onProductCallBack(value: Product)
+}
+
+interface IScanFood {
+    /**
+     * Return a raw data json,
+     * it will be serialized on the way to a Product
+     *
+     * @param  id   an integer id
+     * @return      the product from id=?
+     * @see         Call<Product>
+     */
+    @GET("/scanfoods/{id}")
+    fun getFood(@Path("id") id: Int): Observable<Product>
+}
+
+/**
+ * Gson extension for LocalDate serialization
+ * it will be serialized on the way to a Product
+ */
 internal class LocalDateSerializer : JsonSerializer<LocalDate?> {
     override fun serialize(
         localDate: LocalDate?,
@@ -111,7 +122,10 @@ internal class LocalDateSerializer : JsonSerializer<LocalDate?> {
     }
 }
 
-
+/**
+ * Gson extension for LocalDate deserialization
+ * it will be serialized on the way to a Product
+ */
 internal class LocalDateDeserializer : JsonDeserializer<LocalDate> {
     @Throws(JsonParseException::class)
     override fun deserialize(

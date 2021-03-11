@@ -4,6 +4,7 @@ package com.example.scanfood.presentation.history
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
@@ -83,15 +84,18 @@ class HistoryListActivity : AppCompatActivity() {
     private fun updateUI(state: HistoryListViewModelState){
         when(state){
             HistoryListViewModelState.Loading -> {
+                Toast.makeText(this@HistoryListActivity, "Loading...", Toast.LENGTH_SHORT).show()
                 Log.i(TAG, "updateUI : loading...")
             }
             HistoryListViewModelState.Empty -> {
                 Log.i(TAG, "updateUI : empty list")
             }
             is HistoryListViewModelState.CameraOff -> {
+                Toast.makeText(this@HistoryListActivity, "Camera is now ${ if(state.cameraEnabled) "actived" else "disabled"}", Toast.LENGTH_SHORT).show()
                 Log.i(TAG, "updateUI : camera=${state.cameraEnabled}")
             }
             is HistoryListViewModelState.Failure -> {
+                Toast.makeText(this@HistoryListActivity, "Something wrong occured...", Toast.LENGTH_SHORT).show()
                 Log.d(TAG, "updateUI : failure, err=${state.errorMessage}")
             }
             is HistoryListViewModelState.Changed -> {
