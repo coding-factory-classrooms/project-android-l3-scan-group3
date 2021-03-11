@@ -5,6 +5,7 @@
     android:id="@+id/itemHistory"
     android:layout_width="match_parent"
     android:layout_height="110dp"
+    android:background="#7E575757"
     android:paddingTop="15dp"
     android:paddingBottom="15dp">
 

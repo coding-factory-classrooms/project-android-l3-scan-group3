@@ -3,9 +3,13 @@ package com.example.scanfood.domain
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Color
+import android.os.Build
+import androidx.annotation.RequiresApi
 import com.google.gson.annotations.Expose
 import java.net.URL
-import java.util.*
+import java.time.LocalDate
+import java.time.ZonedDateTime
+import java.time.chrono.ChronoLocalDate
 
 data class Product(
     @Expose
@@ -15,9 +19,9 @@ data class Product(
     @Expose
     val image: String,
     @Expose
-    val dateExp: Date,
+    val dateExp: LocalDate?,
     @Expose(serialize = false, deserialize = false)
-    var scanDate: Date,
+    var scanDate: LocalDate?,
     @Expose(serialize = false, deserialize = false)
     var hide: Boolean = false
 )
@@ -29,12 +33,13 @@ data class Product(
  * @return Int
  * @see
  */
+@RequiresApi(Build.VERSION_CODES.O)
 fun Product.toColorCategory(): Int {
     return when {
-        dateExp.after(Date()) -> {
+        dateExp!!.isAfter(ChronoLocalDate.from(ZonedDateTime.now())) -> {
             Color.RED
         }
-        dateExp.before(Date()) -> {
+        dateExp!!.isBefore(ChronoLocalDate.from(ZonedDateTime.now())) -> {
             Color.GREEN
         }
         else -> {
@@ -50,6 +55,6 @@ fun Product.toColorCategory(): Int {
  * @return Bitmap
  * @see
  */
-fun Product.toImage(url: String): Bitmap {
-    return BitmapFactory.decodeStream(URL(url).openConnection().getInputStream())
+fun Product.toImage(): Bitmap {
+    return BitmapFactory.decodeStream(URL(image).openStream())
 }
