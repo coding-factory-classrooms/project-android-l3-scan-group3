@@ -57,17 +57,7 @@ class HistoryListActivity : AppCompatActivity(), View.OnClickListener, View.OnLo
         binding.recyclerView.layoutManager = LinearLayoutManager(this)
         binding.recyclerView.apply { addItemDecoration(DividerItemDecoration(this.context, DividerItemDecoration.VERTICAL)) }
         model.getState().observe(this, Observer { updateUI(it)})
-
         api.init()
-
-
-        val scanIntent = Intent(this@HistoryListActivity, ScanActivity::class.java)
-        intent.action = Intent.ACTION_VIEW
-
-
-
-
-
 
 
         // to change , the id need to come from the scan result
@@ -76,12 +66,11 @@ class HistoryListActivity : AppCompatActivity(), View.OnClickListener, View.OnLo
             override fun onProductCallBack(value: Product) {
                 Log.i(TAG, "onProductCallBack : $value")
                 model.addItem(value)
-                navigateToScan()
             }
 
         })
         binding.fab.setOnClickListener {
-            if(model.simulateIsActive()) model.simulateScan() else startActivity(intent)
+            if(model.simulateIsActive()) model.simulateScan() else navigateToScan()
         }
         binding.fab.setOnLongClickListener {
             model.toggleCamera()
