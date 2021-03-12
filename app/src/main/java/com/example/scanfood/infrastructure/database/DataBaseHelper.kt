@@ -76,7 +76,6 @@ class DataBaseHandler(var context: Context) : SQLiteOpenHelper(
         db.close()
         Log.i("HistoryActivity", product.toString() + " Product added $_success ")
 
-
         return _success
     }
 
