@@ -76,7 +76,6 @@
         android:textSize="12dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@+id/bGreen" />
-
     <Button
         android:id="@+id/bReload"
         android:layout_width="60dp"
@@ -87,5 +86,4 @@
         android:textSize="12dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@+id/bDate" />
-
 </androidx.constraintlayout.widget.ConstraintLayout>
