@@ -1,18 +1,15 @@
 package com.example.scanfood.presentation.detail
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import androidx.activity.viewModels
-import com.example.scanfood.application.history.HistoryListViewModel
+import androidx.appcompat.app.AppCompatActivity
 import com.example.scanfood.databinding.ActivityDetailBinding
-import com.example.scanfood.domain.Product
+import com.example.scanfood.domain.*
 import com.squareup.picasso.Picasso
 
 class DetailActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityDetailBinding
-    private val model: HistoryListViewModel by viewModels()
     val picasso = Picasso.get()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -23,12 +20,12 @@ class DetailActivity : AppCompatActivity() {
         val data = intent.getParcelableExtra<Product>("product")
         Log.i("DetailActivity", "product=${data!!}")
 
-        binding.textViewProduct.text = model.getTitle(data)
-        binding.textViewDate.text = model.getDateExp(data)
-        binding.textViewDate.setBackgroundColor(model.getSetColor(data))
-        binding.textViewInfo.text = model.getSetInfo(data)
-        binding.textViewDDJ.text = model.getScanDate(data)
-        picasso.load(model.getImage(data)).into(binding.imageViewProduct)
+        binding.textViewProduct.text = data.getTitle()
+        binding.textViewDate.text = data.getDateExp()
+        binding.textViewDate.setBackgroundColor(data.getSetColor())
+        binding.textViewInfo.text = data.getSetInfo()
+        binding.textViewDDJ.text = data.getScanDate()
+        picasso.load(data.getImage()).into(binding.imageViewProduct)
 
         binding.backButton.setOnClickListener {
             finish()
