@@ -1,7 +1,6 @@
 
 package com.example.scanfood.presentation.history
 
-import android.R.attr
 import android.app.Activity
 import android.content.Intent
 import android.os.Build
@@ -15,12 +14,11 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.scanfood.ScanActivity
+import com.example.scanfood.presentation.scan.ScanActivity
 import com.example.scanfood.application.history.HistoryListViewModel
 import com.example.scanfood.application.history.HistoryListViewModelState
 import com.example.scanfood.databinding.ActivityHistoryListBinding
 import com.example.scanfood.domain.Product
-import com.example.scanfood.infrastructure.api.CustomCallBack
 import com.example.scanfood.infrastructure.api.ScanFoodService
 import com.example.scanfood.presentation.detail.DetailActivity
 
@@ -42,6 +40,8 @@ class HistoryListActivity : AppCompatActivity(), View.OnClickListener, View.OnLo
      * Associate [binding], [adapter], [model], [api]
      *
      * Prepare listeners for the FAB
+     * camera off = simulation
+     * camera on = scan
      *
      * @param savedInstanceState Bundle?
      * @return
@@ -57,18 +57,7 @@ class HistoryListActivity : AppCompatActivity(), View.OnClickListener, View.OnLo
         binding.recyclerView.layoutManager = LinearLayoutManager(this)
         binding.recyclerView.apply { addItemDecoration(DividerItemDecoration(this.context, DividerItemDecoration.VERTICAL)) }
         model.getState().observe(this, Observer { updateUI(it)})
-        api.init()
 
-
-        // to change , the id need to come from the scan result
-        api.findById(1, object :
-            CustomCallBack {
-            override fun onProductCallBack(value: Product) {
-                Log.i(TAG, "onProductCallBack : $value")
-                model.addItem(value)
-            }
-
-        })
         binding.fab.setOnClickListener {
             if(model.simulateIsActive()) model.simulateScan() else navigateToScan()
         }
@@ -76,11 +65,15 @@ class HistoryListActivity : AppCompatActivity(), View.OnClickListener, View.OnLo
             model.toggleCamera()
             true
         }
-
-
     }
 
-
+    /**
+     * Navigate to Detail activity
+     *
+     * @param product Product
+     * @return
+     * @see
+     */
     fun navigateToDetail(product: Product){
         val detailIntent = Intent(this@HistoryListActivity, DetailActivity::class.java)
         detailIntent.action = Intent.ACTION_VIEW
@@ -88,6 +81,13 @@ class HistoryListActivity : AppCompatActivity(), View.OnClickListener, View.OnLo
         startActivity(detailIntent)
     }
 
+    /**
+     * Navigate to Scan activity
+     *
+     * @param product Product
+     * @return
+     * @see
+     */
     fun navigateToScan(){
         val scanIntent = Intent(this@HistoryListActivity, ScanActivity::class.java)
         scanIntent.action = Intent.ACTION_VIEW
@@ -125,35 +125,64 @@ class HistoryListActivity : AppCompatActivity(), View.OnClickListener, View.OnLo
             }
         }
     }
+
+    /**
+     * On navigation back to this activity,
+     * if Activity get data, will call API
+     *
+     * @param requestCode Int
+     * @param resultCode Int
+     * @param data Intent?
+     * @return
+     * @see
+     */
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
         if (requestCode == LAUNCH_SECOND_ACTIVITY) {
             if (resultCode == Activity.RESULT_OK) {
                 val result: String? = data!!.getStringExtra("id")
+                model.onFetchQrData(result!!.toInt())
                 Log.i(TAG, "RESULT = $result")
                 if (resultCode == Activity.RESULT_CANCELED) {
-                    //Write your code if there's no result
+                    Log.i(TAG, "onActivityResult=$resultCode")
                 }
             }
         }
+        model.onFetchQrData(4)
     }
 
-    override fun onLongClick(v: View?): Boolean {
-        v?.tag?.run {
-            Log.i("tou", "test long click")
+    /**
+     * Interaction on long click,
+     * will delete a product
+     *
+     * @param v: View
+     * @return
+     * @see
+     */
+    override fun onLongClick(v: View): Boolean {
+        if(v.tag is Product){
+            val product: Product = v.tag as Product
+            Log.i(TAG, "onClickListener=$product")
+            model.deleteItem(product)
         }
         return true
     }
 
-    override fun onClick(v: View?) {
-        kotlin.run {
-            if (v != null) {
-                navigateToDetail(model.getSelectedProduct(v.tag as Int))
-            }
-            Log.i("tou", "test click")
+    /**
+     * Interaction on long click,
+     * will navigate to a detail of a product
+     *
+     * @param v: View
+     * @return
+     * @see
+     */
+    override fun onClick(v: View) {
+        if(v.tag is Product){
+            val product: Product = v.tag as Product
+            navigateToDetail(product)
+            Log.i(TAG, "onClickListener=$product")
         }
-
     }
 
 }

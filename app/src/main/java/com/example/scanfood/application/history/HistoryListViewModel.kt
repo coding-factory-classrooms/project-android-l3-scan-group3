@@ -1,18 +1,17 @@
 package com.example.scanfood.application.history
 
-import android.content.Intent
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
-import androidx.core.content.ContextCompat.startActivity
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.scanfood.domain.Product
 import com.example.scanfood.domain.toColorCategory
 import com.example.scanfood.domain.toInfoCategory
+import com.example.scanfood.infrastructure.api.CustomCallBack
+import com.example.scanfood.infrastructure.api.ScanFoodService
 import java.time.LocalDate
-import java.util.*
 
 const val TAG = "HistoryListViewModel"
 
@@ -23,9 +22,12 @@ sealed class HistoryListViewModelState(
 ) {
     object Loading : HistoryListViewModelState()
     object Empty : HistoryListViewModelState(products = listOf())
-    data class CameraOff(override val cameraEnabled: Boolean) : HistoryListViewModelState(cameraEnabled = cameraEnabled)
+    data class CameraOff(override val cameraEnabled: Boolean) :
+        HistoryListViewModelState(cameraEnabled = cameraEnabled)
+
     data class Failure(override val errorMessage: String) :
         HistoryListViewModelState(errorMessage = errorMessage)
+
     data class Changed(override val products: List<Product>) : HistoryListViewModelState()
 }
 
@@ -39,105 +41,113 @@ class HistoryListViewModel : ViewModel() {
             LocalDate.now(),
             LocalDate.now()
         )
+    private val api: ScanFoodService = ScanFoodService
     private var products = mutableListOf<Product>()
     private val state = MutableLiveData<HistoryListViewModelState>()
     fun getState(): LiveData<HistoryListViewModelState> = state
-    init { state.value = HistoryListViewModelState.Empty }
+
+    init {
+        api.init()
+        state.value = HistoryListViewModelState.Empty
+    }
 
 
     @RequiresApi(Build.VERSION_CODES.O)
-    fun simulateScan(){
+    fun simulateScan() {
         usePlaceHolderData()
         Log.d(TAG, "simulate data wihout camera")
     }
 
-    fun getSelectedProduct(itemIndex: Int) : Product = products[itemIndex]
-
-    fun getQrData(){
-        //TODO : implements
+    fun onFetchQrData(id: Int) {
+        api.findById(id, object :
+            CustomCallBack {
+            override fun onProductCallBack(value: Product) {
+                Log.i(com.example.scanfood.presentation.history.TAG, "onProductCallBack : $value")
+                if (products.contains(value)) updateItem(products.indexOf(value), value) else addItem(value)
+            }
+        })
     }
 
-   fun getDateExp(product: Product) : String {
+    fun getDateExp(product: Product): String {
         return product.dateExp.toString()
     }
 
-    fun getImage(product: Product) : String {
+    fun getImage(product: Product): String {
         return product.image
     }
-    fun getTitle(product: Product) : String {
+
+    fun getTitle(product: Product): String {
         return product.title
     }
 
-    fun simulateIsActive() : Boolean = !state.value!!.cameraEnabled
+    fun simulateIsActive(): Boolean = !state.value!!.cameraEnabled
 
-    fun getScanDate(product: Product) : String {
+    fun getScanDate(product: Product): String {
         return product.scanDate.toString()
     }
 
 
-    fun toggleCamera(){
+    fun toggleCamera() {
         state.postValue(HistoryListViewModelState.CameraOff(cameraEnabled = !state.value!!.cameraEnabled))
     }
 
-    fun getSetColor(product: Product) : Int {
+    fun getSetColor(product: Product): Int {
         return product.toColorCategory()
     }
 
 
-    fun getSetInfo(product: Product) : String {
+    fun getSetInfo(product: Product): String {
         return product.toInfoCategory()
     }
 
-
-
     @RequiresApi(Build.VERSION_CODES.O)
-    private fun usePlaceHolderData(){
-        if(!products.contains(placeholderProduct)) addItem(placeholderProduct)
+    private fun usePlaceHolderData() {
+        if (!products.contains(placeholderProduct)) addItem(placeholderProduct)
     }
 
-    fun clearData(){
+    fun clearData() {
         products = mutableListOf()
         state.postValue(HistoryListViewModelState.Empty)
     }
 
-    fun fetchDataByIdFromApi(){
-        //TODO : implements
 
-    }
-
-    fun getItems(){
+    fun getItems() {
         //TODO : implements
     }
 
-    fun addItem(product: Product){
+    fun addItem(product: Product) {
+        product.scanDate = LocalDate.now()
         products.add(product)
         state.postValue(HistoryListViewModelState.Changed(products = products))
+        // TODO : add on DB
         Log.i(TAG, "product added")
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    fun updateItem(index: Int, product: Product){
+    fun updateItem(index: Int, product: Product) {
         product.scanDate = LocalDate.now()
         products[index] = product
         state.postValue(HistoryListViewModelState.Changed(products = products))
+        // TODO : update on DB
         Log.i(TAG, "product updated")
     }
 
-    fun deleteItem(index: Int, product: Product){
+    fun deleteItem(product: Product) {
         products.remove(product)
         state.postValue(HistoryListViewModelState.Changed(products = products))
+        // TODO : delete on DB
         Log.w(TAG, "product deleted")
     }
 
-    fun orderByDate(){
+    fun orderByDate() {
         products.sortedBy { it.dateExp }
         state.postValue(HistoryListViewModelState.Changed(products = products))
         Log.i(TAG, "products now ordered by expiration date")
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    fun filterByColorDuration(color: Int){
-        products.map { if(it.toColorCategory() != color ) it.hide = true else it.hide }
+    fun filterByColorDuration(color: Int) {
+        products.map { if (it.toColorCategory() != color) it.hide = true else it.hide }
         state.postValue(HistoryListViewModelState.Changed(products = products))
         Log.i(TAG, "products now filtered by duration color")
     }
