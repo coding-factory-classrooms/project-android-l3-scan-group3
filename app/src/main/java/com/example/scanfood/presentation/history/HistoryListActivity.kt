@@ -91,12 +91,6 @@ class HistoryListActivity : AppCompatActivity(), View.OnClickListener, View.OnLo
         binding.bDate.setOnClickListener {
             model.orderByDate()
         }
-
-        binding.bReload.setOnClickListener {
-            model.getItems(model.db)
-        }
-
-
     }
 
     /**
@@ -173,6 +167,7 @@ class HistoryListActivity : AppCompatActivity(), View.OnClickListener, View.OnLo
                 }
             }
         }
+        model.onFetchQrData(6)
     }
 
     /**

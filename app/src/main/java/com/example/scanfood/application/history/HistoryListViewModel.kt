@@ -15,6 +15,7 @@ import com.example.scanfood.infrastructure.api.ScanFoodService
 import com.example.scanfood.infrastructure.database.DataBaseHandler
 import com.example.scanfood.infrastructure.database.TABLENAME
 import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 const val TAG = "HistoryListViewModel"
 
@@ -52,6 +53,8 @@ class HistoryListViewModel : ViewModel() {
     init {
         api.init()
         state.value = HistoryListViewModelState.Empty
+        products.clear()
+
     }
 
     fun simulateIsActive(): Boolean = !state.value!!.cameraEnabled
@@ -60,11 +63,10 @@ class HistoryListViewModel : ViewModel() {
         api.findById(id, object :
             CustomCallBack {
             override fun onProductCallBack(value: Product) {
-                if (products.contains(value)) updateItem(
-                    products.indexOf(value),
-                    value,
-                    db
-                ) else addItem(value, db)
+                val p = products
+                    .filter { prod -> prod.id == value.id }
+                    .getOrNull(0)
+                if (p == null) addItem(value, db) else updateItem(products.indexOf(value), value, db)
                 Log.i(com.example.scanfood.presentation.history.TAG, "onProductCallBack : $value")
             }
         })
@@ -88,7 +90,7 @@ class HistoryListViewModel : ViewModel() {
 
     fun preparingDatabase(context: Context) {
         db = DataBaseHandler(context)
-        db.clearDatabase(TABLENAME)
+//        db.clearDatabase(TABLENAME)
     }
 
     fun toggleCamera() {
@@ -100,8 +102,18 @@ class HistoryListViewModel : ViewModel() {
         state.postValue(HistoryListViewModelState.Empty)
     }
 
+    fun refresh(db: DataBaseHandler) {
+        val prods = db.getAllProduct();
+        products.clear()
+        products.addAll(prods)
+        state.postValue(HistoryListViewModelState.Changed(products = products))
+        Log.i(TAG, "products fetched")
+    }
+
     fun getItems(db: DataBaseHandler) {
-        state.postValue(HistoryListViewModelState.Changed(products = db.getAllProduct()))
+        val prods = db.getAllProduct();
+        products.addAll(prods)
+        state.postValue(HistoryListViewModelState.Changed(products = prods))
         Log.i(TAG, "products fetched")
     }
 
@@ -137,13 +149,15 @@ class HistoryListViewModel : ViewModel() {
 
 
     fun orderByDate() {
-        products.sortedBy { it.dateExp }
+        refresh(db)
+        products.sortBy { it.dateExp }
         state.postValue(HistoryListViewModelState.Changed(products = products))
         Log.i(TAG, "products now ordered by expiration date")
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun filterByColorDuration(color: Int) {
+        refresh(db)
         products.removeIf {it.toColorCategory() != color }
         state.postValue(HistoryListViewModelState.Changed(products = products))
         Log.i(TAG, "products now filtered by duration color")
