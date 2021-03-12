@@ -9,13 +9,10 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.scanfood.domain.Product
 import com.example.scanfood.domain.toColorCategory
-import com.example.scanfood.domain.toInfoCategory
 import com.example.scanfood.infrastructure.api.CustomCallBack
 import com.example.scanfood.infrastructure.api.ScanFoodService
 import com.example.scanfood.infrastructure.database.DataBaseHandler
-import com.example.scanfood.infrastructure.database.TABLENAME
 import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 
 const val TAG = "HistoryListViewModel"
 
@@ -27,10 +24,6 @@ sealed class HistoryListViewModelState(
     object Empty : HistoryListViewModelState(products = listOf())
     data class CameraOff(override val cameraEnabled: Boolean) :
         HistoryListViewModelState(cameraEnabled = cameraEnabled)
-
-    data class Failure(override val errorMessage: String) :
-        HistoryListViewModelState(errorMessage = errorMessage)
-
     data class Changed(override val products: List<Product>) : HistoryListViewModelState()
 }
 
@@ -90,7 +83,6 @@ class HistoryListViewModel : ViewModel() {
 
     fun preparingDatabase(context: Context) {
         db = DataBaseHandler(context)
-//        db.clearDatabase(TABLENAME)
     }
 
     fun toggleCamera() {

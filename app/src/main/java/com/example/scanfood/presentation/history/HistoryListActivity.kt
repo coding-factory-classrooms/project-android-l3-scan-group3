@@ -167,7 +167,6 @@ class HistoryListActivity : AppCompatActivity(), View.OnClickListener, View.OnLo
                 }
             }
         }
-        model.onFetchQrData(6)
     }
 
     /**
