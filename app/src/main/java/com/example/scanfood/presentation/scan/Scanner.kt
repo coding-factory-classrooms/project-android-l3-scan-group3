@@ -10,7 +10,7 @@ import com.google.zxing.BarcodeFormat
 import com.budiyev.android.codescanner.DecodeCallback
 import com.budiyev.android.codescanner.ErrorCallback
 import android.app.Activity
-import android.util.Log
+
 
 
 object Scanner  : Activity() {
@@ -53,6 +53,7 @@ object Scanner  : Activity() {
             codeScanner.stopPreview()
             finish()
         }
+
     }
 
     fun resume() {

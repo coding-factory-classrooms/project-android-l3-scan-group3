@@ -69,16 +69,11 @@ class HistoryListViewModel : ViewModel() {
         })
     }
 
-
-
     fun simulateIsActive(): Boolean = !state.value!!.cameraEnabled
-
-
 
     fun toggleCamera() {
         state.postValue(HistoryListViewModelState.CameraOff(cameraEnabled = !state.value!!.cameraEnabled))
     }
-
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun usePlaceHolderData() {
@@ -89,7 +84,6 @@ class HistoryListViewModel : ViewModel() {
         products = mutableListOf()
         state.postValue(HistoryListViewModelState.Empty)
     }
-
 
     fun getItems() {
         //TODO : implements

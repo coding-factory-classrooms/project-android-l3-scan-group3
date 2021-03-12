@@ -18,7 +18,7 @@ data class Product(
     @Expose
     val image: String,
     @Expose
-    val dateExp: LocalDate?,
+    val dateExp: LocalDate,
     @Expose(serialize = false, deserialize = false)
     var scanDate: LocalDate?,
     @Expose(serialize = false, deserialize = false)
@@ -75,7 +75,7 @@ fun Product.toColorCategory(): Int {
             Color.GREEN
         }
         else -> {
-            Color.rgb(255, 165, 0)
+            Color.YELLOW
         }
     }
 }
@@ -166,3 +166,4 @@ fun Product.getImage(): String {
 fun Product.getTitle(): String {
     return title
 }
+
