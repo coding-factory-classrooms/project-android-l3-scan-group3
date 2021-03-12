@@ -18,7 +18,7 @@ data class Product(
     @Expose
     val image: String,
     @Expose
-    val dateExp: LocalDate?,
+    val dateExp: LocalDate,
     @Expose(serialize = false, deserialize = false)
     var scanDate: LocalDate?,
     @Expose(serialize = false, deserialize = false)
