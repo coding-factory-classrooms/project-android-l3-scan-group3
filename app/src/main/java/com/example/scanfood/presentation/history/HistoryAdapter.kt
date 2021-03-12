@@ -26,7 +26,7 @@ class HistoryAdapter(private  var products: List<Product>, private val itemClick
             expirationDateTextView.text = product.dateExp.toString()
             expirationDateTextView.setBackgroundColor(product.toColorCategory())
             picasso.load(product.image).into(itemImageView)
-
+            holder.itemView.tag = product
             holder.itemView.setOnClickListener(itemClickListener)
             holder.itemView.setOnLongClickListener(itemLongClickListener)
         }

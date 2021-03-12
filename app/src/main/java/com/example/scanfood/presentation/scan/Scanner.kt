@@ -1,28 +1,15 @@
-package com.example.scanfood
+package com.example.scanfood.presentation.scan
 
 import android.content.Context
-import android.widget.TextView
 import android.widget.Toast
 import com.budiyev.android.codescanner.AutoFocusMode
 import com.budiyev.android.codescanner.CodeScanner
-import com.budiyev.android.codescanner.CodeScannerView
 import com.budiyev.android.codescanner.ScanMode
 import com.example.scanfood.databinding.ActivityScanBinding
 import com.google.zxing.BarcodeFormat
-import androidx.activity.viewModels
 import com.budiyev.android.codescanner.DecodeCallback
 import com.budiyev.android.codescanner.ErrorCallback
-import android.Manifest
 import android.app.Activity
-import com.example.scanfood.ScanActivity
-import android.content.pm.PackageManager
-import androidx.appcompat.app.AppCompatActivity
-import android.os.Bundle
-
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
-import com.example.scanfood.databinding.ActivityLoginBinding
-import com.example.scanfood.infrastructure.api.CustomCallBack
 
 
 object Scanner  : Activity() {
@@ -62,13 +49,13 @@ object Scanner  : Activity() {
     }
 
     fun resume() {
-        if(::codeScanner.isInitialized) {
+        if(Scanner::codeScanner.isInitialized) {
             codeScanner?.startPreview()
         }
     }
 
     fun pause() {
-        if(::codeScanner.isInitialized) {
+        if(Scanner::codeScanner.isInitialized) {
             codeScanner?.releaseResources()
         }
     }

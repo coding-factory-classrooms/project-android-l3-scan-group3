@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/fond"
-    tools:context=".ScanActivity">
+    tools:context=".presentation.scan.ScanActivity">
 
     <com.budiyev.android.codescanner.CodeScannerView
         android:id="@+id/scan_view"

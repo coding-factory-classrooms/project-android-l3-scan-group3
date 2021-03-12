@@ -1,14 +1,11 @@
 package com.example.scanfood.domain
 
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.os.Build
 import android.os.Parcel
 import android.os.Parcelable
 import androidx.annotation.RequiresApi
 import com.google.gson.annotations.Expose
-import java.net.URL
 import java.time.LocalDate
 import java.time.ZonedDateTime
 import java.time.chrono.ChronoLocalDate
@@ -83,6 +80,13 @@ fun Product.toColorCategory(): Int {
     }
 }
 
+/**
+ * Convert to a message depending on date
+ *
+ * @param
+ * @return
+ * @see
+ */
 fun Product.toInfoCategory(): String {
     return when {
         dateExp!!.isAfter(ChronoLocalDate.from(ZonedDateTime.now())) -> {
@@ -95,15 +99,4 @@ fun Product.toInfoCategory(): String {
             "Votre aliment est bientôt périmé. Faites attention !"
         }
     }
-}
-
-/**
- * Convert url image to Bitmap image
- *
- * @param
- * @return Bitmap
- * @see
- */
-fun Product.toImage(): Bitmap {
-    return BitmapFactory.decodeStream(URL(image).openStream())
 }
