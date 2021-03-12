@@ -47,7 +47,6 @@ class DataBaseHandler(var context: Context) : SQLiteOpenHelper(
         val dateFormat = SimpleDateFormat(
             "dd/MM/yyyy", Locale.getDefault()
         )
-        val date = Date()
         return dateFormat.format(date)
     }
 
@@ -55,7 +54,9 @@ class DataBaseHandler(var context: Context) : SQLiteOpenHelper(
     @RequiresApi(Build.VERSION_CODES.O)
     fun getStringToDate(string: String): LocalDate? {
         val dateTime = LocalDate.parse(string, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
-
+        if (string.isBlank() || string.isEmpty()){
+            return null
+        }else
         return dateTime
     }
 
@@ -72,7 +73,6 @@ class DataBaseHandler(var context: Context) : SQLiteOpenHelper(
         val _success = db.insert(TABLENAME, null, values)
         db.close()
         Log.i("HistoryActivity", product.toString() + " Product ")
-        Log.i("HistoryActivity", getDateToString(product.scanDate) + "scanDate")
 
 
         return (Integer.parseInt("$_success") != -1)
@@ -106,14 +106,12 @@ class DataBaseHandler(var context: Context) : SQLiteOpenHelper(
     fun updateProduct(product: Product): Boolean {
         val db = this.writableDatabase
         val values = ContentValues()
-        values.put(COL_NAME, product.title)
-        values.put(COL_IMAGE, product.image)
-        values.put(COL_DATEEXP, getDateToString(product.dateExp))
         values.put(COL_SCANDATE, getDateToString(product.scanDate))
-        val _success = db.update(TABLENAME, values, COL_ID + "=?", arrayOf(product.id.toString())).toLong()
+        val _success = db.update(TABLENAME, values, COL_ID + "=?", arrayOf(product.id.toString()))
         db.close()
         return Integer.parseInt("$_success") != -1
     }
+
     fun deleteProduct(_id: Int): Boolean {
         val db = this.writableDatabase
         val _success = db.delete(TABLENAME, COL_ID + "=?", arrayOf(_id.toString())).toLong()
