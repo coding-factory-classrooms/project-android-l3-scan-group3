@@ -1,5 +1,6 @@
 package com.example.scanfood.application.history
 
+import android.content.Context
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
@@ -11,6 +12,7 @@ import com.example.scanfood.domain.toColorCategory
 import com.example.scanfood.domain.toInfoCategory
 import com.example.scanfood.infrastructure.api.CustomCallBack
 import com.example.scanfood.infrastructure.api.ScanFoodService
+import com.example.scanfood.infrastructure.database.DataBaseHandler
 import java.time.LocalDate
 
 const val TAG = "HistoryListViewModel"
@@ -41,6 +43,7 @@ class HistoryListViewModel : ViewModel() {
             LocalDate.now(),
             LocalDate.now()
         )
+    private lateinit var db: DataBaseHandler
     private val api: ScanFoodService = ScanFoodService
     private var products = mutableListOf<Product>()
     private val state = MutableLiveData<HistoryListViewModelState>()
@@ -52,6 +55,9 @@ class HistoryListViewModel : ViewModel() {
         Log.i(TAG, "initState")
     }
 
+    fun preparingDatabase(context: Context){
+        db = DataBaseHandler(context)
+    }
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun simulateScan() {
@@ -86,14 +92,15 @@ class HistoryListViewModel : ViewModel() {
     }
 
     fun getItems() {
-        //TODO : implements
+        state.postValue(HistoryListViewModelState.Changed(products = db.getAllProduct()))
+        Log.i(TAG, "products fetched")
     }
 
     fun addItem(product: Product) {
         product.scanDate = LocalDate.now()
         products.add(product)
         state.postValue(HistoryListViewModelState.Changed(products = products))
-        // TODO : add on DB
+        db.addProduct(product)
         Log.i(TAG, "product added")
     }
 
@@ -102,14 +109,14 @@ class HistoryListViewModel : ViewModel() {
         product.scanDate = LocalDate.now()
         products[index] = product
         state.postValue(HistoryListViewModelState.Changed(products = products))
-        // TODO : update on DB
+        db.updateProduct(product)
         Log.i(TAG, "product updated")
     }
 
     fun deleteItem(product: Product) {
         products.remove(product)
         state.postValue(HistoryListViewModelState.Changed(products = products))
-        // TODO : delete on DB
+        db.deleteProduct(product.id)
         Log.w(TAG, "product deleted")
     }
 

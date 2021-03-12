@@ -56,6 +56,8 @@ class HistoryListActivity : AppCompatActivity(), View.OnClickListener, View.OnLo
         binding.recyclerView.adapter = adapter
         binding.recyclerView.layoutManager = LinearLayoutManager(this)
         binding.recyclerView.apply { addItemDecoration(DividerItemDecoration(this.context, DividerItemDecoration.VERTICAL)) }
+        model.preparingDatabase(this)
+        model.getItems()
         model.getState().observe(this, Observer { updateUI(it)})
 
         binding.fab.setOnClickListener {
@@ -149,7 +151,6 @@ class HistoryListActivity : AppCompatActivity(), View.OnClickListener, View.OnLo
                 }
             }
         }
-        model.onFetchQrData(4)
     }
 
     /**
