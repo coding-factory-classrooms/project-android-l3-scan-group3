@@ -91,6 +91,7 @@ class HistoryListActivity : AppCompatActivity(), View.OnClickListener, View.OnLo
         binding.bDate.setOnClickListener {
             model.orderByDate()
         }
+
     }
 
     /**
