@@ -10,6 +10,7 @@ import androidx.annotation.RequiresApi
 import com.example.scanfood.domain.Product
 import java.text.SimpleDateFormat
 import java.time.LocalDate
+import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.*
 
@@ -28,26 +29,34 @@ class DataBaseHandler(var context: Context) : SQLiteOpenHelper(
     1
 ) {
     override fun onCreate(db: SQLiteDatabase?) {
-        val createTable = "CREATE TABLE " + TABLENAME + "(" + COL_ID + " INTEGER PRIMARY KEY," + COL_NAME + " VARCHAR(256)," + COL_IMAGE + " VARCHAR(256)," + COL_DATEEXP + " VARCHAR(256)," + COL_SCANDATE + " VARCHAR(256)," + COL_USERNAME + " VARCHAR(256));"
+        val createTable = "CREATE TABLE " + TABLENAME + "(" + COL_ID + "INTEGER PRIMARY KEY," + COL_NAME + " VARCHAR(256)," + COL_IMAGE + "VARCHAR(256)," + COL_DATEEXP + "VARCHAR(256)," + COL_SCANDATE + "VARCHAR(256)," + COL_USERNAME + "VARCHAR(256))"
         db?.execSQL(createTable)
     }
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
         //onCreate(db);
     }
 
+    fun clearDatabase(TABLE_NAME: String) {
+        val db = this.writableDatabase
+        val clearDBQuery = "DELETE FROM $TABLE_NAME"
+        db.execSQL(clearDBQuery)
+    }
+
+
     private fun getDateToString(date: LocalDate?): String? {
         val dateFormat = SimpleDateFormat(
-            "yyyy-MM-dd", Locale.getDefault()
+            "dd/MM/yyyy", Locale.getDefault()
         )
         val date = Date()
         return dateFormat.format(date)
     }
 
+
     @RequiresApi(Build.VERSION_CODES.O)
     fun getStringToDate(string: String): LocalDate? {
-        var simpleFormat =  DateTimeFormatter.ISO_DATE;
-        var convertedDate = LocalDate.parse(string, simpleFormat)
-        return convertedDate
+        val dateTime = LocalDate.parse(string, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+
+        return dateTime
     }
 
     fun addProduct(product: Product): Boolean {
@@ -62,6 +71,10 @@ class DataBaseHandler(var context: Context) : SQLiteOpenHelper(
 
         val _success = db.insert(TABLENAME, null, values)
         db.close()
+        Log.i("HistoryActivity", product.toString() + " Product ")
+        Log.i("HistoryActivity", getDateToString(product.scanDate) + "scanDate")
+
+
         return (Integer.parseInt("$_success") != -1)
     }
 
@@ -75,11 +88,13 @@ class DataBaseHandler(var context: Context) : SQLiteOpenHelper(
         val cursor = db.rawQuery(query, null)
         if (cursor.moveToFirst()) {
             do {
-                 product = Product(Integer.parseInt(cursor.getString(cursor.getColumnIndex(COL_ID))),
+                 product = Product(
+                     Integer.parseInt(cursor.getString(cursor.getColumnIndex(COL_ID))),
                      cursor.getString(cursor.getColumnIndex(COL_NAME)),
                      cursor.getString(cursor.getColumnIndex(COL_IMAGE)),
                      getStringToDate(cursor.getString(cursor.getColumnIndex(COL_DATEEXP))),
-                     getStringToDate(cursor.getString(cursor.getColumnIndex(COL_SCANDATE))))
+                     getStringToDate(cursor.getString(cursor.getColumnIndex(COL_SCANDATE)))
+                 )
                 list.add(product)
             }
             while (cursor.moveToNext())

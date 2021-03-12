@@ -75,7 +75,7 @@ fun Product.toColorCategory(): Int {
             Color.GREEN
         }
         else -> {
-            Color.rgb(255, 165, 0)
+            Color.YELLOW
         }
     }
 }
