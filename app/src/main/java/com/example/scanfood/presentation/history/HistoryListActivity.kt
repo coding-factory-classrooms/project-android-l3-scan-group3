@@ -24,11 +24,12 @@ import com.example.scanfood.databinding.ActivityHistoryListBinding
 import com.example.scanfood.domain.Product
 import com.example.scanfood.infrastructure.api.CustomCallBack
 import com.example.scanfood.infrastructure.api.ScanFoodService
+import com.example.scanfood.presentation.detail.DetailActivity
 
 
 const val TAG = "HistoryActivity"
 
-class HistoryListActivity : AppCompatActivity() {
+class HistoryListActivity : AppCompatActivity(), View.OnClickListener, View.OnLongClickListener {
 
     private lateinit var binding: ActivityHistoryListBinding
     private lateinit var adapter: HistoryAdapter
@@ -62,17 +63,14 @@ class HistoryListActivity : AppCompatActivity() {
         api.init()
 
 
-        val intent = Intent(this@HistoryListActivity, ScanActivity::class.java)
+        val scanIntent = Intent(this@HistoryListActivity, ScanActivity::class.java)
         intent.action = Intent.ACTION_VIEW
 
 
-        binding.fab.setOnClickListener {
-            if(model.simulateIsActive()) model.simulateScan() else startActivity(intent)
-        }
-        binding.fab.setOnLongClickListener {
-            model.toggleCamera()
-            true
-        }
+        val detailIntent = Intent(this@HistoryListActivity, DetailActivity::class.java)
+        detailIntent.action = Intent.ACTION_VIEW
+
+
 
 
         // to change , the id need to come from the scan result
@@ -84,6 +82,16 @@ class HistoryListActivity : AppCompatActivity() {
             }
 
         })
+        binding.fab.setOnClickListener {
+            if(model.simulateIsActive()) model.simulateScan() else startActivity(intent)
+        }
+        binding.fab.setOnLongClickListener {
+            model.toggleCamera()
+            detailIntent.putExtra("product", model.placeholderProduct)
+            startActivity(detailIntent)
+            true
+        }
+
 
     }
 

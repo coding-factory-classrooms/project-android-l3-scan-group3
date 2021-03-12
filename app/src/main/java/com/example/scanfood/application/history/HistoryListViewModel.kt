@@ -8,6 +8,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.scanfood.domain.Product
 import com.example.scanfood.domain.toColorCategory
+import com.example.scanfood.domain.toInfoCategory
 import java.time.LocalDate
 import java.util.*
 
@@ -30,7 +31,7 @@ sealed class HistoryListViewModelState(
 
 class HistoryListViewModel : ViewModel() {
     @RequiresApi(Build.VERSION_CODES.O)
-    private var placeholderProduct: Product =
+    var placeholderProduct: Product =
         Product(
             0,
             "Tarte aux pommes",
@@ -50,25 +51,27 @@ class HistoryListViewModel : ViewModel() {
         Log.d(TAG, "simulate data wihout camera")
     }
 
+    fun getSingleItem(itemIndex: Int) : Product = products[itemIndex]
+
     fun getQrData(){
         //TODO : implements
     }
 
-   fun getDateExp() : String {
-        return placeholderProduct.dateExp.toString()
+   fun getDateExp(product: Product) : String {
+        return product.dateExp.toString()
     }
 
-    fun getImage() : String {
-        return placeholderProduct.image
+    fun getImage(product: Product) : String {
+        return product.image
     }
-    fun getTitle() : String {
-        return placeholderProduct.title
+    fun getTitle(product: Product) : String {
+        return product.title
     }
 
     fun simulateIsActive() : Boolean = !state.value!!.cameraEnabled
 
-    fun getScanDate() : String {
-        return placeholderProduct.scanDate.toString()
+    fun getScanDate(product: Product) : String {
+        return product.scanDate.toString()
     }
 
 
@@ -76,13 +79,13 @@ class HistoryListViewModel : ViewModel() {
         state.postValue(HistoryListViewModelState.CameraOff(cameraEnabled = !state.value!!.cameraEnabled))
     }
 
-    fun getSetColor() : Int {
-        return placeholderProduct.toColorCategory()
+    fun getSetColor(product: Product) : Int {
+        return product.toColorCategory()
     }
 
 
-    fun getSetInfo() : String {
-        return placeholderProduct.toInfoCategory()
+    fun getSetInfo(product: Product) : String {
+        return product.toInfoCategory()
     }
 
 

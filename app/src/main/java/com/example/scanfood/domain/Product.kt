@@ -4,6 +4,8 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.os.Build
+import android.os.Parcel
+import android.os.Parcelable
 import androidx.annotation.RequiresApi
 import com.google.gson.annotations.Expose
 import java.net.URL
@@ -24,7 +26,40 @@ data class Product(
     var scanDate: LocalDate?,
     @Expose(serialize = false, deserialize = false)
     var hide: Boolean = false
-)
+) : Parcelable {
+    constructor(parcel: Parcel) : this(
+        parcel.readInt(),
+        parcel.readString()!!,
+        parcel.readString()!!,
+        LocalDate.parse(parcel.readString()),
+        LocalDate.parse(parcel.readString()),
+        parcel.readByte() != 0.toByte()
+    ) {
+    }
+
+    override fun writeToParcel(parcel: Parcel, flags: Int) {
+        parcel.writeInt(id)
+        parcel.writeString(title)
+        parcel.writeString(image)
+        parcel.writeString(dateExp.toString())
+        parcel.writeString(scanDate.toString())
+        parcel.writeByte(if (hide) 1 else 0)
+    }
+
+    override fun describeContents(): Int {
+        return 0
+    }
+
+    companion object CREATOR : Parcelable.Creator<Product> {
+        override fun createFromParcel(parcel: Parcel): Product {
+            return Product(parcel)
+        }
+
+        override fun newArray(size: Int): Array<Product?> {
+            return arrayOfNulls(size)
+        }
+    }
+}
 
 /**
  * Convert to Color according to date
