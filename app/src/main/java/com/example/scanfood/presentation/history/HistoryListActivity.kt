@@ -60,6 +60,8 @@ class HistoryListActivity : AppCompatActivity(), View.OnClickListener, View.OnLo
         binding.recyclerView.adapter = adapter
         binding.recyclerView.layoutManager = LinearLayoutManager(this)
         binding.recyclerView.apply { addItemDecoration(DividerItemDecoration(this.context, DividerItemDecoration.VERTICAL)) }
+        model.preparingDatabase(this)
+        model.getItems(model.db)
         model.getState().observe(this, Observer { updateUI(it)})
         val search = binding.searchView
         val adapter1 = ArrayAdapter(this, android.R.layout.simple_expandable_list_item_1, colors)
@@ -132,20 +134,12 @@ class HistoryListActivity : AppCompatActivity(), View.OnClickListener, View.OnLo
      */
     private fun updateUI(state: HistoryListViewModelState){
         when(state){
-            HistoryListViewModelState.Loading -> {
-                Toast.makeText(this@HistoryListActivity, "Loading...", Toast.LENGTH_SHORT).show()
-                Log.i(TAG, "updateUI : loading...")
-            }
             HistoryListViewModelState.Empty -> {
                 Log.i(TAG, "updateUI : empty list")
             }
             is HistoryListViewModelState.CameraOff -> {
                 Toast.makeText(this@HistoryListActivity, "Camera is now ${ if(state.cameraEnabled) "actived" else "disabled"}", Toast.LENGTH_SHORT).show()
                 Log.i(TAG, "updateUI : camera=${state.cameraEnabled}")
-            }
-            is HistoryListViewModelState.Failure -> {
-                Toast.makeText(this@HistoryListActivity, "Something wrong occured...", Toast.LENGTH_SHORT).show()
-                Log.d(TAG, "updateUI : failure, err=${state.errorMessage}")
             }
             is HistoryListViewModelState.Changed -> {
                 Log.i(TAG, "updateUI : changed, state=$state")
@@ -177,7 +171,6 @@ class HistoryListActivity : AppCompatActivity(), View.OnClickListener, View.OnLo
                 }
             }
         }
-        model.onFetchQrData(4)
     }
 
     /**
@@ -192,7 +185,7 @@ class HistoryListActivity : AppCompatActivity(), View.OnClickListener, View.OnLo
         if(v.tag is Product){
             val product: Product = v.tag as Product
             Log.i(TAG, "onClickListener=$product")
-            model.deleteItem(product)
+            model.deleteItem(product, model.db)
         }
         return true
     }

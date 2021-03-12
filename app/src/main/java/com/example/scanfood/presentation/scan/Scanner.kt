@@ -10,6 +10,7 @@ import com.google.zxing.BarcodeFormat
 import com.budiyev.android.codescanner.DecodeCallback
 import com.budiyev.android.codescanner.ErrorCallback
 import android.app.Activity
+import android.util.Log
 
 
 object Scanner  : Activity() {
@@ -46,6 +47,13 @@ object Scanner  : Activity() {
         binding.scanView.setOnClickListener {
             codeScanner.startPreview()
         }
+
+        binding.fabBack.setOnClickListener {
+            Log.i("ScanActivity", "closing the scanner...")
+            codeScanner.stopPreview()
+            finish()
+        }
+
     }
 
     fun resume() {

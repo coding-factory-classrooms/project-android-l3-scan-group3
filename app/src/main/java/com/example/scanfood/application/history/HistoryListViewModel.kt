@@ -1,5 +1,6 @@
 package com.example.scanfood.application.history
 
+import android.content.Context
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
@@ -11,6 +12,8 @@ import com.example.scanfood.domain.toColorCategory
 import com.example.scanfood.domain.toInfoCategory
 import com.example.scanfood.infrastructure.api.CustomCallBack
 import com.example.scanfood.infrastructure.api.ScanFoodService
+import com.example.scanfood.infrastructure.database.DataBaseHandler
+import com.example.scanfood.infrastructure.database.TABLENAME
 import java.time.LocalDate
 
 const val TAG = "HistoryListViewModel"
@@ -20,7 +23,6 @@ sealed class HistoryListViewModelState(
     open val cameraEnabled: Boolean = true,
     open val products: List<Product> = listOf()
 ) {
-    object Loading : HistoryListViewModelState()
     object Empty : HistoryListViewModelState(products = listOf())
     data class CameraOff(override val cameraEnabled: Boolean) :
         HistoryListViewModelState(cameraEnabled = cameraEnabled)
@@ -41,6 +43,7 @@ class HistoryListViewModel : ViewModel() {
             LocalDate.now(),
             LocalDate.now()
         )
+    lateinit var db: DataBaseHandler
     private val api: ScanFoodService = ScanFoodService
     private var products = mutableListOf<Product>()
     private val state = MutableLiveData<HistoryListViewModelState>()
@@ -51,58 +54,45 @@ class HistoryListViewModel : ViewModel() {
         state.value = HistoryListViewModelState.Empty
     }
 
-
-    @RequiresApi(Build.VERSION_CODES.O)
-    fun simulateScan() {
-        usePlaceHolderData()
-        Log.d(TAG, "simulate data wihout camera")
-    }
+    fun simulateIsActive(): Boolean = !state.value!!.cameraEnabled
 
     fun onFetchQrData(id: Int) {
         api.findById(id, object :
             CustomCallBack {
             override fun onProductCallBack(value: Product) {
+                if (products.contains(value)) updateItem(
+                    products.indexOf(value),
+                    value,
+                    db
+                ) else addItem(value, db)
                 Log.i(com.example.scanfood.presentation.history.TAG, "onProductCallBack : $value")
-                if (products.contains(value)) updateItem(products.indexOf(value), value) else addItem(value)
             }
         })
     }
 
-    fun getDateExp(product: Product): String {
-        return product.dateExp.toString()
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun simulateScan() {
+        usePlaceHolderData()
+        Log.d(TAG, "simulate data without camera")
     }
 
-    fun getImage(product: Product): String {
-        return product.image
-    }
-
-    fun getTitle(product: Product): String {
-        return product.title
-    }
-
-    fun simulateIsActive(): Boolean = !state.value!!.cameraEnabled
-
-    fun getScanDate(product: Product): String {
-        return product.scanDate.toString()
-    }
-
-
-    fun toggleCamera() {
-        state.postValue(HistoryListViewModelState.CameraOff(cameraEnabled = !state.value!!.cameraEnabled))
-    }
-
-    fun getSetColor(product: Product): Int {
-        return product.toColorCategory()
-    }
-
-
-    fun getSetInfo(product: Product): String {
-        return product.toInfoCategory()
+    fun simulateScanWithoutDb(){
+        products.add(placeholderProduct)
+        state.postValue(HistoryListViewModelState.Changed(products = products))
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun usePlaceHolderData() {
-        if (!products.contains(placeholderProduct)) addItem(placeholderProduct)
+        if (!products.contains(placeholderProduct)) addItem(placeholderProduct, db)
+    }
+
+    fun preparingDatabase(context: Context) {
+        db = DataBaseHandler(context)
+        db.clearDatabase(TABLENAME)
+    }
+
+    fun toggleCamera() {
+        state.postValue(HistoryListViewModelState.CameraOff(cameraEnabled = !state.value!!.cameraEnabled))
     }
 
     fun clearData() {
@@ -110,32 +100,39 @@ class HistoryListViewModel : ViewModel() {
         state.postValue(HistoryListViewModelState.Empty)
     }
 
-
-    fun getItems() {
-        //TODO : implements
+    fun getItems(db: DataBaseHandler) {
+        state.postValue(HistoryListViewModelState.Changed(products = db.getAllProduct()))
+        Log.i(TAG, "products fetched")
     }
 
-    fun addItem(product: Product) {
+    fun addItem(product: Product, db: DataBaseHandler) {
         product.scanDate = LocalDate.now()
         products.add(product)
-        state.postValue(HistoryListViewModelState.Changed(products = products))
-        // TODO : add on DB
+        val done = db.addProduct(product)
+        if (done.toString() != (-1).toString()) {
+            state.postValue(HistoryListViewModelState.Changed(products = products))
+        }
         Log.i(TAG, "product added")
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    fun updateItem(index: Int, product: Product) {
+    fun updateItem(index: Int, product: Product, db: DataBaseHandler) {
         product.scanDate = LocalDate.now()
         products[index] = product
-        state.postValue(HistoryListViewModelState.Changed(products = products))
-        // TODO : update on DB
+        val isDone = db.updateProduct(product)
+        if (isDone) {
+            state.postValue(HistoryListViewModelState.Changed(products = products))
+        }
         Log.i(TAG, "product updated")
     }
 
-    fun deleteItem(product: Product) {
+    fun deleteItem(product: Product, db: DataBaseHandler) {
         products.remove(product)
-        state.postValue(HistoryListViewModelState.Changed(products = products))
-        // TODO : delete on DB
+        val isDone = db.deleteProduct(product.id)
+        if (isDone) {
+            state.postValue(HistoryListViewModelState.Changed(products = products))
+        }
+
         Log.w(TAG, "product deleted")
     }
 

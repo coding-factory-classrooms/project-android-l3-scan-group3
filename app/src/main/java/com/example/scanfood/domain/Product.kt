@@ -72,16 +72,13 @@ data class Product(
 fun Product.toColorCategory(): Int {
     return when {
         dateExp!!.isAfter(ChronoLocalDate.from(ZonedDateTime.now())) -> {
-            Log.i("color", "$dateExp + ${LocalDate.now()}")
             Color.GREEN
         }
         dateExp!!.isBefore(ChronoLocalDate.from(ZonedDateTime.now())) -> {
-            Log.i("color","green")
             Color.RED
         }
         else -> {
-            Log.i("color", "yellow")
-            Color.YELLOW
+            Color.rgb(255, 165, 0)
         }
     }
 }
@@ -106,3 +103,70 @@ fun Product.toInfoCategory(): String {
         }
     }
 }
+
+/**
+ * Get Color
+ *
+ * @param
+ * @return
+ * @see
+ */
+fun Product.getSetColor(): Int {
+    return toColorCategory()
+}
+
+/**
+ * Get info
+ *
+ * @param
+ * @return
+ * @see
+ */
+fun Product.getSetInfo(): String {
+    return toInfoCategory()
+}
+
+/**
+ * Get scan date
+ *
+ * @param
+ * @return
+ * @see
+ */
+fun Product.getScanDate(): String {
+    return scanDate.toString()
+}
+
+/**
+ * Get date exp
+ *
+ * @param
+ * @return
+ * @see
+ */
+fun Product.getDateExp(): String {
+    return dateExp.toString()
+}
+
+/**
+ * Get image
+ *
+ * @param
+ * @return
+ * @see
+ */
+fun Product.getImage(): String {
+    return image
+}
+
+/**
+ * Get title
+ *
+ * @param
+ * @return
+ * @see
+ */
+fun Product.getTitle(): String {
+    return title
+}
+
