@@ -3,6 +3,7 @@ package com.example.scanfood.presentation.history
 
 import android.app.Activity
 import android.content.Intent
+import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -63,8 +64,6 @@ class HistoryListActivity : AppCompatActivity(), View.OnClickListener, View.OnLo
         model.preparingDatabase(this)
         model.getItems(model.db)
         model.getState().observe(this, Observer { updateUI(it)})
-        val search = binding.searchView
-        val adapter1 = ArrayAdapter(this, android.R.layout.simple_expandable_list_item_1, colors)
 
 
         binding.fab.setOnClickListener {
@@ -75,26 +74,29 @@ class HistoryListActivity : AppCompatActivity(), View.OnClickListener, View.OnLo
             true
         }
 
+        binding.bRed.setOnClickListener {
+            model.filterByColorDuration(Color.RED)
+        }
 
-        search.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
-            override fun onQueryTextSubmit(query: String?): Boolean {
-                search.clearFocus()
-                if(colors.contains(query)) {
-                    colorsTri(query)
-                   // adapter1.filter.filter(query)
+        binding.bOrange.setOnClickListener {
+            model.filterByColorDuration(Color.rgb(255, 165, 0))
 
-                } else {
-                    Toast.makeText(applicationContext, "Color not found", Toast.LENGTH_LONG).show()
-                }
-                return false
-            }
+        }
 
-            override fun onQueryTextChange(newText: String?): Boolean {
-                colorsTri(newText)
-                return false
-            }
+        binding.bGreen.setOnClickListener {
+            model.filterByColorDuration(Color.GREEN)
 
-        })
+        }
+
+        binding.bDate.setOnClickListener {
+            model.orderByDate()
+        }
+
+        binding.bReload.setOnClickListener {
+            model.getItems(model.db)
+        }
+
+
     }
 
     /**
@@ -205,14 +207,5 @@ class HistoryListActivity : AppCompatActivity(), View.OnClickListener, View.OnLo
             Log.i(TAG, "onClickListener=$product")
         }
     }
-
-    fun colorsTri(text: String?) {
-        when(text) {
-            "red" -> model.filterByColorDuration(-65536) //color int red
-            "green" -> model.filterByColorDuration(-16711936) // color int green
-            "yellow" -> model.filterByColorDuration(-256) //color int yellow
-        }
-    }
-
 
 }

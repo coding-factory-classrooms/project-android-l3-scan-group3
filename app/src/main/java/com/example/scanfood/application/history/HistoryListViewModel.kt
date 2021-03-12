@@ -132,7 +132,6 @@ class HistoryListViewModel : ViewModel() {
         if (isDone) {
             state.postValue(HistoryListViewModelState.Changed(products = products))
         }
-
         Log.w(TAG, "product deleted")
     }
 
@@ -145,12 +144,7 @@ class HistoryListViewModel : ViewModel() {
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun filterByColorDuration(color: Int) {
-        products.map { if (it.toColorCategory() != color) {
-            it.hide = true
-            
-        } else {
-            it.hide
-        } }
+        products.removeIf {it.toColorCategory() != color }
         state.postValue(HistoryListViewModelState.Changed(products = products))
         Log.i(TAG, "products now filtered by duration color")
     }
