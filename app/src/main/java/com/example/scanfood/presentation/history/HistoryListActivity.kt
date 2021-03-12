@@ -81,10 +81,10 @@ class HistoryListActivity : AppCompatActivity(), View.OnClickListener, View.OnLo
     }
 
 
-    fun navigateToDetail(){
+    fun navigateToDetail(product: Product){
         val detailIntent = Intent(this@HistoryListActivity, DetailActivity::class.java)
         detailIntent.action = Intent.ACTION_VIEW
-        detailIntent.putExtra("product", model.placeholderProduct)
+        detailIntent.putExtra("product", product)
         startActivity(detailIntent)
     }
 
@@ -140,14 +140,20 @@ class HistoryListActivity : AppCompatActivity(), View.OnClickListener, View.OnLo
     }
 
     override fun onLongClick(v: View?): Boolean {
-        if(v?.tag != null)
-            Log.i(TAG, "test long click")
+        v?.tag?.run {
+            Log.i("tou", "test long click")
+        }
         return true
     }
 
     override fun onClick(v: View?) {
-        if(v?.tag != null)
-            Log.i(TAG, "test click")
+        kotlin.run {
+            if (v != null) {
+                navigateToDetail(model.getSelectedProduct(v.tag as Int))
+            }
+            Log.i("tou", "test click")
+        }
+
     }
 
 }

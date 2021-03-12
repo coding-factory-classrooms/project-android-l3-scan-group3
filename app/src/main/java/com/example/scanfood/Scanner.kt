@@ -75,7 +75,6 @@ object Scanner  : Activity() {
 }
 
 interface ScannerCallBack{
-
     /**
      * Callback based on scan ID
      *

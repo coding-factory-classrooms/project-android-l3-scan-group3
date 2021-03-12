@@ -29,8 +29,6 @@ sealed class HistoryListViewModelState(
     data class Changed(override val products: List<Product>) : HistoryListViewModelState()
 }
 
-
-
 class HistoryListViewModel : ViewModel() {
     @RequiresApi(Build.VERSION_CODES.O)
     var placeholderProduct: Product =
@@ -53,7 +51,7 @@ class HistoryListViewModel : ViewModel() {
         Log.d(TAG, "simulate data wihout camera")
     }
 
-    fun getSingleItem(itemIndex: Int) : Product = products[itemIndex]
+    fun getSelectedProduct(itemIndex: Int) : Product = products[itemIndex]
 
     fun getQrData(){
         //TODO : implements
