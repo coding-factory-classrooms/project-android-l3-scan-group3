@@ -7,6 +7,8 @@ import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.ArrayAdapter
+import android.widget.SearchView
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
@@ -14,6 +16,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.scanfood.R
 import com.example.scanfood.presentation.scan.ScanActivity
 import com.example.scanfood.application.history.HistoryListViewModel
 import com.example.scanfood.application.history.HistoryListViewModelState
@@ -32,6 +35,7 @@ class HistoryListActivity : AppCompatActivity(), View.OnClickListener, View.OnLo
     private val model: HistoryListViewModel by viewModels()
     private val api: ScanFoodService = ScanFoodService
     private val LAUNCH_SECOND_ACTIVITY: Int = 1
+    val colors = arrayOf("green", "red", "yellow")
 
     /**
      * Create all requirements
@@ -57,6 +61,9 @@ class HistoryListActivity : AppCompatActivity(), View.OnClickListener, View.OnLo
         binding.recyclerView.layoutManager = LinearLayoutManager(this)
         binding.recyclerView.apply { addItemDecoration(DividerItemDecoration(this.context, DividerItemDecoration.VERTICAL)) }
         model.getState().observe(this, Observer { updateUI(it)})
+        val search = binding.searchView
+        val adapter1 = ArrayAdapter(this, android.R.layout.simple_expandable_list_item_1, colors)
+
 
         binding.fab.setOnClickListener {
             if(model.simulateIsActive()) model.simulateScan() else navigateToScan()
@@ -65,6 +72,27 @@ class HistoryListActivity : AppCompatActivity(), View.OnClickListener, View.OnLo
             model.toggleCamera()
             true
         }
+
+
+        search.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                search.clearFocus()
+                if(colors.contains(query)) {
+                    colorsTri(query)
+                   // adapter1.filter.filter(query)
+
+                } else {
+                    Toast.makeText(applicationContext, "Color not found", Toast.LENGTH_LONG).show()
+                }
+                return false
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                colorsTri(newText)
+                return false
+            }
+
+        })
     }
 
     /**
@@ -184,5 +212,14 @@ class HistoryListActivity : AppCompatActivity(), View.OnClickListener, View.OnLo
             Log.i(TAG, "onClickListener=$product")
         }
     }
+
+    fun colorsTri(text: String?) {
+        when(text) {
+            "red" -> model.filterByColorDuration(-65536) //color int red
+            "green" -> model.filterByColorDuration(-16711936) // color int green
+            "yellow" -> model.filterByColorDuration(-256) //color int yellow
+        }
+    }
+
 
 }

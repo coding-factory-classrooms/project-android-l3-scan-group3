@@ -4,6 +4,7 @@ import android.graphics.Color
 import android.os.Build
 import android.os.Parcel
 import android.os.Parcelable
+import android.util.Log
 import androidx.annotation.RequiresApi
 import com.google.gson.annotations.Expose
 import java.time.LocalDate
@@ -65,16 +66,21 @@ data class Product(
  * @return Int
  * @see
  */
+
+
 @RequiresApi(Build.VERSION_CODES.O)
 fun Product.toColorCategory(): Int {
     return when {
         dateExp!!.isAfter(ChronoLocalDate.from(ZonedDateTime.now())) -> {
-            Color.RED
-        }
-        dateExp!!.isBefore(ChronoLocalDate.from(ZonedDateTime.now())) -> {
+            Log.i("color", "$dateExp + ${LocalDate.now()}")
             Color.GREEN
         }
+        dateExp!!.isBefore(ChronoLocalDate.from(ZonedDateTime.now())) -> {
+            Log.i("color","green")
+            Color.RED
+        }
         else -> {
+            Log.i("color", "yellow")
             Color.YELLOW
         }
     }
@@ -90,10 +96,10 @@ fun Product.toColorCategory(): Int {
 fun Product.toInfoCategory(): String {
     return when {
         dateExp!!.isAfter(ChronoLocalDate.from(ZonedDateTime.now())) -> {
-            "Votre aliment a dépassé la date d'expiration."
+            "Tout va bien !"
         }
         dateExp!!.isBefore(ChronoLocalDate.from(ZonedDateTime.now())) -> {
-            "Tout va bien !"
+            "Votre aliment a dépassé la date d'expiration."
         }
         else -> {
             "Votre aliment est bientôt périmé. Faites attention !"
