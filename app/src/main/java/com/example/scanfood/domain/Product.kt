@@ -100,3 +100,69 @@ fun Product.toInfoCategory(): String {
         }
     }
 }
+
+/**
+ * Get Color
+ *
+ * @param
+ * @return
+ * @see
+ */
+fun Product.getSetColor(): Int {
+    return toColorCategory()
+}
+
+/**
+ * Get info
+ *
+ * @param
+ * @return
+ * @see
+ */
+fun Product.getSetInfo(): String {
+    return toInfoCategory()
+}
+
+/**
+ * Get scan date
+ *
+ * @param
+ * @return
+ * @see
+ */
+fun Product.getScanDate(): String {
+    return scanDate.toString()
+}
+
+/**
+ * Get date exp
+ *
+ * @param
+ * @return
+ * @see
+ */
+fun Product.getDateExp(): String {
+    return dateExp.toString()
+}
+
+/**
+ * Get image
+ *
+ * @param
+ * @return
+ * @see
+ */
+fun Product.getImage(): String {
+    return image
+}
+
+/**
+ * Get title
+ *
+ * @param
+ * @return
+ * @see
+ */
+fun Product.getTitle(): String {
+    return title
+}

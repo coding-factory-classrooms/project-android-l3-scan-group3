@@ -49,56 +49,36 @@ class HistoryListViewModel : ViewModel() {
     init {
         api.init()
         state.value = HistoryListViewModelState.Empty
+        Log.i(TAG, "initState")
     }
 
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun simulateScan() {
         usePlaceHolderData()
-        Log.d(TAG, "simulate data wihout camera")
+        Log.d(TAG, "simulate data without camera")
     }
 
     fun onFetchQrData(id: Int) {
         api.findById(id, object :
             CustomCallBack {
             override fun onProductCallBack(value: Product) {
-                Log.i(com.example.scanfood.presentation.history.TAG, "onProductCallBack : $value")
                 if (products.contains(value)) updateItem(products.indexOf(value), value) else addItem(value)
+                Log.i(com.example.scanfood.presentation.history.TAG, "onProductCallBack : $value")
             }
         })
     }
 
-    fun getDateExp(product: Product): String {
-        return product.dateExp.toString()
-    }
 
-    fun getImage(product: Product): String {
-        return product.image
-    }
-
-    fun getTitle(product: Product): String {
-        return product.title
-    }
 
     fun simulateIsActive(): Boolean = !state.value!!.cameraEnabled
 
-    fun getScanDate(product: Product): String {
-        return product.scanDate.toString()
-    }
 
 
     fun toggleCamera() {
         state.postValue(HistoryListViewModelState.CameraOff(cameraEnabled = !state.value!!.cameraEnabled))
     }
 
-    fun getSetColor(product: Product): Int {
-        return product.toColorCategory()
-    }
-
-
-    fun getSetInfo(product: Product): String {
-        return product.toInfoCategory()
-    }
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun usePlaceHolderData() {
