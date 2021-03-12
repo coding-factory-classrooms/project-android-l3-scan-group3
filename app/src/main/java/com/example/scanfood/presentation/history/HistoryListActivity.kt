@@ -1,6 +1,7 @@
 
 package com.example.scanfood.presentation.history
 
+import android.R.attr
 import android.app.Activity
 import android.content.Intent
 import android.os.Build
@@ -8,9 +9,6 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Toast
-import androidx.activity.result.ActivityResult
-import androidx.activity.result.ActivityResultCallback
-import androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
@@ -35,7 +33,7 @@ class HistoryListActivity : AppCompatActivity(), View.OnClickListener, View.OnLo
     private lateinit var adapter: HistoryAdapter
     private val model: HistoryListViewModel by viewModels()
     private val api: ScanFoodService = ScanFoodService
-
+    private val LAUNCH_SECOND_ACTIVITY: Int = 1
 
     /**
      * Create all requirements
@@ -67,8 +65,7 @@ class HistoryListActivity : AppCompatActivity(), View.OnClickListener, View.OnLo
         intent.action = Intent.ACTION_VIEW
 
 
-        val detailIntent = Intent(this@HistoryListActivity, DetailActivity::class.java)
-        detailIntent.action = Intent.ACTION_VIEW
+
 
 
 
@@ -79,6 +76,7 @@ class HistoryListActivity : AppCompatActivity(), View.OnClickListener, View.OnLo
             override fun onProductCallBack(value: Product) {
                 Log.i(TAG, "onProductCallBack : $value")
                 model.addItem(value)
+                navigateToScan()
             }
 
         })
@@ -87,12 +85,24 @@ class HistoryListActivity : AppCompatActivity(), View.OnClickListener, View.OnLo
         }
         binding.fab.setOnLongClickListener {
             model.toggleCamera()
-            detailIntent.putExtra("product", model.placeholderProduct)
-            startActivity(detailIntent)
             true
         }
 
 
+    }
+
+
+    fun navigateToDetail(){
+        val detailIntent = Intent(this@HistoryListActivity, DetailActivity::class.java)
+        detailIntent.action = Intent.ACTION_VIEW
+        detailIntent.putExtra("product", model.placeholderProduct)
+        startActivity(detailIntent)
+    }
+
+    fun navigateToScan(){
+        val scanIntent = Intent(this@HistoryListActivity, ScanActivity::class.java)
+        scanIntent.action = Intent.ACTION_VIEW
+        startActivityForResult(scanIntent, LAUNCH_SECOND_ACTIVITY)
     }
 
     /**
@@ -123,6 +133,19 @@ class HistoryListActivity : AppCompatActivity(), View.OnClickListener, View.OnLo
             is HistoryListViewModelState.Changed -> {
                 Log.i(TAG, "updateUI : changed, state=$state")
                 adapter.updateDataSet(state.products)
+            }
+        }
+    }
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == LAUNCH_SECOND_ACTIVITY) {
+            if (resultCode == Activity.RESULT_OK) {
+                val result: String? = data!!.getStringExtra("id")
+                Log.i(TAG, "RESULT = $result")
+                if (resultCode == Activity.RESULT_CANCELED) {
+                    //Write your code if there's no result
+                }
             }
         }
     }

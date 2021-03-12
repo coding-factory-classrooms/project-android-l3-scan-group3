@@ -1,8 +1,10 @@
 package com.example.scanfood.application.history
 
+import android.content.Intent
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
+import androidx.core.content.ContextCompat.startActivity
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -141,4 +143,5 @@ class HistoryListViewModel : ViewModel() {
         state.postValue(HistoryListViewModelState.Changed(products = products))
         Log.i(TAG, "products now filtered by duration color")
     }
+
 }

@@ -29,7 +29,7 @@ object Scanner  : Activity() {
     lateinit var binding: ActivityScanBinding
     lateinit var codeScanner: CodeScanner
 
-    fun startScan(context: Context) {
+    fun startScan(context: Context, callBack: ScannerCallBack){
         codeScanner = CodeScanner(context, binding.scanView)
         codeScanner.camera = CodeScanner.CAMERA_BACK // active la camera de derriere
         codeScanner.formats = listOf(BarcodeFormat.QR_CODE) // scan uniquement les qr codes
@@ -43,7 +43,7 @@ object Scanner  : Activity() {
         codeScanner.decodeCallback = DecodeCallback {
             runOnUiThread {
                 binding.textViewResult.text = it.text
-                finish()
+                callBack.onScanIDCallBack(it.text)
             }
         }
         codeScanner.errorCallback = ErrorCallback { // or ErrorCallback.SUPPRESS

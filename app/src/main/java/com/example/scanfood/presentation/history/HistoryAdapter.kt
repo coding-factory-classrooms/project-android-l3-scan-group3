@@ -1,15 +1,12 @@
 package com.example.scanfood.presentation.history
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.scanfood.databinding.ItemHistoryBinding
 import com.example.scanfood.domain.Product
 import com.example.scanfood.domain.toColorCategory
-import com.example.scanfood.domain.toImage
 import com.squareup.picasso.Picasso
 
 class HistoryAdapter(private  var products: List<Product>, private val itemClickListener: View.OnClickListener, private val itemLongClickListener: View.OnLongClickListener) : RecyclerView.Adapter<HistoryAdapter.ViewHolder>() {
@@ -42,3 +39,5 @@ class HistoryAdapter(private  var products: List<Product>, private val itemClick
         notifyDataSetChanged()
     }
 }
+
+
