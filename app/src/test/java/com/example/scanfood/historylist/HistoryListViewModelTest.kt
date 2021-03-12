@@ -71,14 +71,4 @@ class HistoryListViewModelTest {
             ), observer.observedValues
         )
     }
-
-    @Test
-    fun `inputting a color should sort the list`() {
-
-    }
-
-    @Test
-    fun `click on sort by date should success`() {
-
-    }
 }
