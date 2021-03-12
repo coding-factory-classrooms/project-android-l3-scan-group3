@@ -1,6 +1,8 @@
 package com.example.scanfood
 
 import android.Manifest
+import android.app.Activity
+import android.content.Intent
 import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -32,7 +34,14 @@ class ScanActivity : AppCompatActivity() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_DENIED) {
             ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.CAMERA), 111)
         } else {
-            scan.startScan(this)
+            scan.startScan(this, object : ScannerCallBack{
+                override fun onScanIDCallBack(value: String) {
+                    val intent = Intent()
+                    intent.putExtra("id", value)
+                    setResult(Activity.RESULT_OK, intent)
+                    finish()
+                }
+            })
         }
     }
 
@@ -42,7 +51,7 @@ class ScanActivity : AppCompatActivity() {
         if (requestCode == 111) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 Toast.makeText(this, "Autorisation accordée", Toast.LENGTH_SHORT).show()
-                scan.startScan(this)
+//                scan.startScan(this)
             } else {
                 Toast.makeText(this, "Autorisation refusée", Toast.LENGTH_SHORT).show()
             }

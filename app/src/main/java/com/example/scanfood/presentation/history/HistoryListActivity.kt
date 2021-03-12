@@ -1,35 +1,39 @@
 
 package com.example.scanfood.presentation.history
 
+import android.R.attr
+import android.app.Activity
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.Toast
-import androidx.activity.result.ActivityResult
-import androidx.activity.result.ActivityResultCallback
-import androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.scanfood.databinding.ActivityHistoryListBinding
-import com.example.scanfood.domain.Product
+import com.example.scanfood.ScanActivity
 import com.example.scanfood.application.history.HistoryListViewModel
 import com.example.scanfood.application.history.HistoryListViewModelState
+import com.example.scanfood.databinding.ActivityHistoryListBinding
+import com.example.scanfood.domain.Product
 import com.example.scanfood.infrastructure.api.CustomCallBack
 import com.example.scanfood.infrastructure.api.ScanFoodService
+import com.example.scanfood.presentation.detail.DetailActivity
 
 
 const val TAG = "HistoryActivity"
 
-class HistoryListActivity : AppCompatActivity() {
+class HistoryListActivity : AppCompatActivity(), View.OnClickListener, View.OnLongClickListener {
 
     private lateinit var binding: ActivityHistoryListBinding
     private lateinit var adapter: HistoryAdapter
     private val model: HistoryListViewModel by viewModels()
     private val api: ScanFoodService = ScanFoodService
+    private val LAUNCH_SECOND_ACTIVITY: Int = 1
 
     /**
      * Create all requirements
@@ -48,26 +52,12 @@ class HistoryListActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityHistoryListBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        adapter = HistoryAdapter(listOf())
+        adapter = HistoryAdapter(listOf(), this, this)
         binding.recyclerView.adapter = adapter
         binding.recyclerView.layoutManager = LinearLayoutManager(this)
         binding.recyclerView.apply { addItemDecoration(DividerItemDecoration(this.context, DividerItemDecoration.VERTICAL)) }
         model.getState().observe(this, Observer { updateUI(it)})
-
         api.init()
-
-
-//        val intent = Intent(this@HistoryListActivity, ScanActivity::class.java)
-//        intent.action = Intent.ACTION_VIEW
-//        intent.addCategory()
-
-        binding.fab.setOnClickListener {
-            if(model.simulateIsActive()) model.simulateScan() else startActivity(intent)
-        }
-        binding.fab.setOnLongClickListener {
-            model.toggleCamera()
-            true
-        }
 
 
         // to change , the id need to come from the scan result
@@ -79,7 +69,29 @@ class HistoryListActivity : AppCompatActivity() {
             }
 
         })
+        binding.fab.setOnClickListener {
+            if(model.simulateIsActive()) model.simulateScan() else navigateToScan()
+        }
+        binding.fab.setOnLongClickListener {
+            model.toggleCamera()
+            true
+        }
 
+
+    }
+
+
+    fun navigateToDetail(){
+        val detailIntent = Intent(this@HistoryListActivity, DetailActivity::class.java)
+        detailIntent.action = Intent.ACTION_VIEW
+        detailIntent.putExtra("product", model.placeholderProduct)
+        startActivity(detailIntent)
+    }
+
+    fun navigateToScan(){
+        val scanIntent = Intent(this@HistoryListActivity, ScanActivity::class.java)
+        scanIntent.action = Intent.ACTION_VIEW
+        startActivityForResult(scanIntent, LAUNCH_SECOND_ACTIVITY)
     }
 
     /**
@@ -113,4 +125,29 @@ class HistoryListActivity : AppCompatActivity() {
             }
         }
     }
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == LAUNCH_SECOND_ACTIVITY) {
+            if (resultCode == Activity.RESULT_OK) {
+                val result: String? = data!!.getStringExtra("id")
+                Log.i(TAG, "RESULT = $result")
+                if (resultCode == Activity.RESULT_CANCELED) {
+                    //Write your code if there's no result
+                }
+            }
+        }
+    }
+
+    override fun onLongClick(v: View?): Boolean {
+        if(v?.tag != null)
+            Log.i(TAG, "test long click")
+        return true
+    }
+
+    override fun onClick(v: View?) {
+        if(v?.tag != null)
+            Log.i(TAG, "test click")
+    }
+
 }
